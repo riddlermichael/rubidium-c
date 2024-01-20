@@ -1,0 +1,44 @@
+Checks: >
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  google-*,
+  hicpp-*,
+  llvm-namespace-comment,
+  misc-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -cert-err58-cpp,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -hicpp-signed-bitwise,
+  -misc-use-anonymous-namespace,
+  -readability-identifier-length,
+  -readability-implicit-bool-conversion,
+  -readability-magic-numbers
+
+FormatStyle: file
+CheckOptions:
+  - { key: readability-identifier-naming.EnumCase, value: lower_case }
+  - { key: readability-identifier-naming.EnumPrefix, value: rbc_ }
+  - { key: readability-identifier-naming.EnumConstantCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.EnumConstantPrefix, value: RBC_ }
+  - { key: readability-identifier-naming.FunctionCase, value: lower_case }
+  - { key: readability-identifier-naming.GlobalConstantCase, value: lower_case }
+  - { key: readability-identifier-naming.GlobalConstantPrefix, value: k_ }
+  - { key: readability-identifier-naming.MacroDefinitionCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.MacroDefinitionPrefix, value: RBC_ }
+  - { key: readability-identifier-naming.MemberCase, value: lower_case }
+  - { key: readability-identifier-naming.ParameterCase, value: lower_case }
+  - { key: readability-identifier-naming.StaticConstantCase, value: lower_case }
+  - { key: readability-identifier-naming.StaticConstantPrefix, value: sc_ }
+  - { key: readability-identifier-naming.StructCase, value: lower_case }
+  - { key: readability-identifier-naming.StructPrefix, value: rbc_ }
+  - { key: readability-identifier-naming.TypedefCase, value: lower_case }
+  - { key: readability-identifier-naming.TypedefPrefix, value: rbc_ }
+  - { key: readability-identifier-naming.UnionCase, value: lower_case }
+  - { key: readability-identifier-naming.VariableCase, value: lower_case }

@@ -1,0 +1,4 @@
+#define RBC_VERSION_MAJOR @rubidium-c_VERSION_MAJOR@
+#define RBC_VERSION_MINOR @rubidium-c_VERSION_MINOR@
+#define RBC_VERSION_PATCH @rubidium-c_VERSION_PATCH@
+#define RBC_VERSION_STR "@rubidium-c_VERSION@"
