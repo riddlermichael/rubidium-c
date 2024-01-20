@@ -11,51 +11,67 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        build_type: [Release]
-        c_compiler: [gcc, clang, cl]
+        build-type: [Release]
+        c-compiler: [gcc, clang, cl]
         include:
           - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
+            c-compiler: cl
+            cpp-compiler: cl
           - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
+            c-compiler: gcc
+            cpp-compiler: g++
           - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            c-compiler: clang
+            cpp-compiler: clang++
         exclude:
           - os: windows-latest
-            c_compiler: gcc
+            c-compiler: gcc
           - os: windows-latest
-            c_compiler: clang
+            c-compiler: clang
           - os: ubuntu-latest
-            c_compiler: cl
+            c-compiler: cl
 
     steps:
     - uses: actions/checkout@v3
+    - uses: seanmiddleditch/gha-setup-ninja@v4
+      if: matrix.os != 'windows-latest'
 
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
+    - name: Set environment
+      id: env-win
+      if: matrix.os == 'windows-latest'
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "nproc=%NUMBER_OF_PROCESSORS%" >> "$GITHUB_ENV"
+
+    - name: Set environment
+      id: env-linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo "nproc=$(nproc)" >> "$GITHUB_ENV"
+        echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
+
+    - name: Get build dir
+      id: vars
+      shell: bash
+      run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        cmake
+        -B ${{ steps.vars.outputs.build-output-dir }}
         -S ${{ github.workspace }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp-compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c-compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: >
+        cmake --build ${{ steps.vars.outputs.build-output-dir }}
+        --config ${{ matrix.build-type }}
+        --parallel ${{ env.nproc }}
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build_type }}
+      working-directory: ${{ steps.vars.outputs.build-output-dir }}
+      run: ctest --build-config ${{ matrix.build-type }}

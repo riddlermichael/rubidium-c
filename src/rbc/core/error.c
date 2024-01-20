@@ -41,7 +41,7 @@ bool rbc_error_to_string_s(char* buf, usize size, rbc_error error) { // NOLINT(*
 	char const* desc = rbc_error_to_string(error);
 	if (!desc) {
 		char tmp[RBC_TO_CHARS_RESULT_MAX_LEN + 1];
-		rbc_to_chars_result const result = rbc_to_chars(tmp, tmp + RBC_ARRAY_SIZE(tmp), error);
+		rbc_to_chars_result const result = rbc_to_chars(tmp, tmp + RBC_ARRAY_SIZE(tmp), (int) error);
 		usize const count = result.ptr - tmp;
 		usize const required_size = strlen(RBC_UNDEFINED_ERROR_DESC) + strlen(": ") + count;
 		if (required_size >= size) {

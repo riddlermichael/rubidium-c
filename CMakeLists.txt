@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.15)
 
 # from CMake 3.21 there is PROJECT_IS_TOP_LEVEL
 if(NOT DEFINED PROJECT_NAME)
@@ -17,6 +17,7 @@ project(rubidium-c
 
 set(MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${MODULE_PATH}")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE INTERNAL "CMake module path" FORCE)
 include(utils)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
