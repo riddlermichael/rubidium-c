@@ -49,6 +49,7 @@ RBC_EXPORT rbc_duration rbc_duration_min(i64 min);
 RBC_EXPORT rbc_duration rbc_duration_h(i64 h);
 
 RBC_EXPORT bool rbc_duration_is_inf(rbc_duration self);
+RBC_EXPORT bool rbc_duration_is_neg(rbc_duration self);
 
 // rel. ops
 RBC_EXPORT bool rbc_duration_lt(rbc_duration lhs, rbc_duration rhs);
@@ -66,6 +67,13 @@ RBC_EXPORT rbc_duration rbc_duration_sub(rbc_duration lhs, rbc_duration rhs);
 // conversions
 RBC_EXPORT rbc_timespec rbc_duration_to_timespec(rbc_duration self);
 RBC_EXPORT rbc_duration rbc_duration_from_timespec(rbc_timespec ts);
+
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_ns(rbc_duration self);
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_us(rbc_duration self);
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_ms(rbc_duration self);
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_s(rbc_duration self);
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_min(rbc_duration self);
+RBC_EXPORT RBC_CONST i64 rbc_duration_to_h(rbc_duration self);
 
 RBC_END_EXTERN_C
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdnoreturn.h>
+
 #include <rbc/core/compiler.h>
 
 #ifdef __cplusplus
@@ -13,7 +15,13 @@
 #else
 	#define RBC_ALIGNAS(x) _Alignas(x)
 	#define RBC_ALIGNOF(x) _Alignof(x)
-	#define RBC_NORETURN _Noreturn
+	#ifdef noreturn
+		#define RBC_NORETURN noreturn
+	#elif defined(RBC_COMPILER_MSVC)
+		#define RBC_NORETURN __declspec(noreturn)
+	#else
+		#define RBC_NORETURN
+	#endif
 	#define RBC_RESTRICT restrict
 	#define RBC_STATIC_ASSERT(cond) _Static_assert(cond, #cond)
 	#define RBC_STATIC_ASSERT_X(cond, msg) _Static_assert(cond, msg)

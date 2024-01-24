@@ -98,7 +98,16 @@ enum rbc_error {
 
 typedef enum rbc_error rbc_error;
 
+/// System error code.
+typedef unsigned rbc_error_code;
+
 RBC_BEGIN_EXTERN_C
+
+RBC_EXPORT rbc_error_code rbc_get_last_error(void);
+
+RBC_EXPORT rbc_error rbc_error_from_error_code(rbc_error_code code);
+
+RBC_EXPORT rbc_error rbc_error_from_last_error(void);
 
 /**
  * Returns a pointer to the textual description of the error code @p error.

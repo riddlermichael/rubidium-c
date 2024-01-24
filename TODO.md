@@ -34,6 +34,16 @@
 ### `sync`
 - [ ] `[[nodiscard]]`
 - [ ] static mutexes
+- [ ] do we need to get actual stack size?
+- [ ] windows
+  - [ ] `cond_var`
+  - [ ] `mutex`
+  - [ ] `spinlock`
+  - [ ] `tls` destructor
 
 ### `time`
 - [ ] `TIME_V2`: use `i128`
+- [ ] duration
+  - [ ] reduce size to 12 bytes 
+  - [ ] division
+  - [ ] conversions

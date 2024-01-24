@@ -17,15 +17,13 @@ struct rbc_once {
 
 #elif RBC_USE(WIN32_THREADS)
 
-	#include <Windows.h>
-
 struct rbc_once {
-	INIT_ONCE impl;
+	void* impl;
 };
 
-	#define RBC_ONCE_INIT         \
-		(rbc_once) {              \
-			INIT_ONCE_STATIC_INIT \
+	#define RBC_ONCE_INIT \
+		{                 \
+			{ NULL }      \
 		}
 
 #endif
@@ -36,6 +34,6 @@ RBC_BEGIN_EXTERN_C
 
 typedef void (*rbc_once_fn)(void);
 
-RBC_EXPORT rbc_error rbc_call_once(rbc_once* once, rbc_once_fn fn) RBC_NONNULL;
+RBC_EXPORT rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) RBC_NONNULL;
 
 RBC_END_EXTERN_C

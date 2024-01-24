@@ -41,4 +41,50 @@ rbc_error rbc_cond_var_wait_until(rbc_cond_var self, rbc_mutex mutex, rbc_time d
 	return pthread_cond_timedwait(RBC_SYNC_IMPL, mtx, (struct timespec const*) &ts);
 }
 
+#elif RBC_USE(WIN32_THREADS)
+
+struct rbc_cond_var_impl {
+	CONDITION_VARIABLE impl;
+};
+
+rbc_error rbc_cond_var_init(rbc_cond_var* self) {
+	RBC_SYNC_INIT(rbc_cond_var);
+	InitializeConditionVariable(RBC_SYNC_IMPL_PTR);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_cond_var_destroy(rbc_cond_var* self) {
+	// see https://joeduffyblog.com/2006/11/28/windows-keyed-events-critical-sections-and-new-vista-synchronization-features/
+	RBC_SYNC_DESTROY(RBC_ERROR_OK);
+}
+
+rbc_error rbc_cond_var_notify(rbc_cond_var self) {
+	WakeConditionVariable(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_cond_var_notify_all(rbc_cond_var self) {
+	WakeAllConditionVariable(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_cond_var_wait(rbc_cond_var self, rbc_mutex mutex) {
+	CRITICAL_SECTION* cs = (CRITICAL_SECTION*) mutex.impl;
+	RBC_SYNC_CHECK_LAST_ERROR(SleepConditionVariableCS(RBC_SYNC_IMPL, cs, INFINITE));
+}
+
+rbc_error rbc_cond_var_wait_for(rbc_cond_var self, rbc_mutex mutex, rbc_duration timeout) {
+	RBC_UNUSED(self);
+	RBC_UNUSED(mutex);
+	RBC_UNUSED(timeout);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_cond_var_wait_until(rbc_cond_var self, rbc_mutex mutex, rbc_time deadline) {
+	RBC_UNUSED(self);
+	RBC_UNUSED(mutex);
+	RBC_UNUSED(deadline);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
 #endif

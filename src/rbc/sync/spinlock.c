@@ -29,4 +29,31 @@ rbc_error rbc_spinlock_unlock(rbc_spinlock self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_spin_unlock(RBC_SYNC_IMPL);
 }
 
+#elif RBC_USE(WIN32_THREADS)
+
+rbc_error rbc_spinlock_init(rbc_spinlock* self) {
+	RBC_UNUSED(self);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_spinlock_destroy(rbc_spinlock* self) {
+	RBC_UNUSED(self);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_spinlock_lock(rbc_spinlock self) {
+	RBC_UNUSED(self);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_spinlock_try_lock(rbc_spinlock self) {
+	RBC_UNUSED(self);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_spinlock_unlock(rbc_spinlock self) {
+	RBC_UNUSED(self);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
 #endif

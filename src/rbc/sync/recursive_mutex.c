@@ -62,4 +62,74 @@ rbc_error rbc_recursive_mutex_unlock(rbc_recursive_mutex self) {
 	return pthread_mutex_unlock(RBC_SYNC_IMPL);
 }
 
+#elif RBC_USE(WIN32_THREADS)
+
+struct rbc_recursive_mutex_impl {
+	CRITICAL_SECTION impl;
+};
+
+rbc_error rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
+	RBC_SYNC_INIT(rbc_recursive_mutex);
+
+	/**
+	 * Windows Server 2003 and Windows XP:
+	 * In low memory situations, InitializeCriticalSection can raise a STATUS_NO_MEMORY exception.
+	 * Starting with Windows Vista, this exception was eliminated and InitializeCriticalSection always succeeds,
+	 * even in low memory situations.
+	 */
+	#if _WIN32_WINNT >= 0x0600
+	InitializeCriticalSection(RBC_SYNC_IMPL_PTR);
+	#else
+	__try {
+		InitializeCriticalSection(RBC_SYNC_IMPL_PTR);
+	} __except (EXCEPTION_EXECUTE_HANDLER) {
+		return RBC_ERROR_NOT_ENOUGH_MEMORY;
+	}
+	#endif
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_recursive_mutex_destroy(rbc_recursive_mutex* self) {
+	DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
+	RBC_SYNC_DESTROY(RBC_ERROR_OK);
+}
+
+rbc_error rbc_recursive_mutex_lock(rbc_recursive_mutex self) {
+	/**
+	 * This function can raise EXCEPTION_POSSIBLE_DEADLOCK, also known as STATUS_POSSIBLE_DEADLOCK,
+	 * if a wait operation on the critical section times out.
+	 * The timeout interval is specified by the following registry value:
+	 * HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\CriticalSectionTimeout.
+	 */
+	__try {
+		EnterCriticalSection(RBC_SYNC_IMPL);
+	} __except (EXCEPTION_EXECUTE_HANDLER) {
+		return RBC_ERROR_RESOURCE_DEADLOCK_WOULD_OCCUR;
+	}
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_recursive_mutex_lock_for(rbc_recursive_mutex self, rbc_duration timeout) {
+	RBC_UNUSED(self);
+	RBC_UNUSED(timeout);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_recursive_mutex_lock_until(rbc_recursive_mutex self, rbc_time deadline) {
+	RBC_UNUSED(self);
+	RBC_UNUSED(deadline);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+}
+
+rbc_error rbc_recursive_mutex_try_lock(rbc_recursive_mutex self) {
+	return TryEnterCriticalSection(RBC_SYNC_IMPL)
+	         ? RBC_ERROR_OK
+	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+}
+
+rbc_error rbc_recursive_mutex_unlock(rbc_recursive_mutex self) {
+	LeaveCriticalSection(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
 #endif

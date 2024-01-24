@@ -2,9 +2,7 @@
 
 #include <rbc/core/attributes.h>
 #include <rbc/core/error.h>
-#include <rbc/core/export.h>
 #include <rbc/core/keywords.h>
-#include <rbc/core/types.h>
 
 enum {
 	/// Maximal length of a result string (not including '\0') produced by rbc_to_chars

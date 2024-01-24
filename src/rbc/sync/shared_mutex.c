@@ -65,4 +65,55 @@ rbc_error rbc_shared_mutex_unlock_shared(rbc_shared_mutex self) RBC_NO_THREAD_SA
 	return pthread_rwlock_unlock(RBC_SYNC_IMPL);
 }
 
+#elif RBC_USE(WIN32_THREADS)
+
+struct rbc_shared_mutex_impl {
+	SRWLOCK impl;
+};
+
+rbc_error rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind kind) {
+	RBC_UNUSED(kind);
+	RBC_SYNC_INIT(rbc_shared_mutex);
+	InitializeSRWLock(RBC_SYNC_IMPL_PTR);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_shared_mutex_destroy(rbc_shared_mutex* self) {
+	// an unlocked SRW lock with no waiting threads is in its initial state and can be copied, moved,
+	// and forgotten without being explicitly destroyed
+	RBC_SYNC_DESTROY(RBC_ERROR_OK);
+}
+
+rbc_error rbc_shared_mutex_lock(rbc_shared_mutex self) {
+	AcquireSRWLockExclusive(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_shared_mutex_try_lock(rbc_shared_mutex self) {
+	return TryAcquireSRWLockExclusive(RBC_SYNC_IMPL)
+	         ? RBC_ERROR_OK
+	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+}
+
+rbc_error rbc_shared_mutex_lock_shared(rbc_shared_mutex self) {
+	AcquireSRWLockShared(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_shared_mutex_try_lock_shared(rbc_shared_mutex self) {
+	return TryAcquireSRWLockShared(RBC_SYNC_IMPL)
+	         ? RBC_ERROR_OK
+	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+}
+
+rbc_error rbc_shared_mutex_unlock(rbc_shared_mutex self) {
+	ReleaseSRWLockExclusive(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
+rbc_error rbc_shared_mutex_unlock_shared(rbc_shared_mutex self) {
+	ReleaseSRWLockShared(RBC_SYNC_IMPL);
+	return RBC_ERROR_OK;
+}
+
 #endif
