@@ -159,27 +159,107 @@ rbc_error rbc_error_from_last_error(void) {
 }
 
 char const* rbc_error_to_string(rbc_error error) {
-	if (error < RBC_ERROR_MIN || error > RBC_ERROR_MAX) {
-		return NULL; // or "Undefined error"
+	// EOPNOTSUPP and ENOTSUP may be identical
+	if (error == RBC_ERROR_NOT_SUPPORTED) {
+		return "Operation not supported";
 	}
 
-	if (error == RBC_ERROR_UNKNOWN) {
-		return "Unknown error";
+	// EAGAIN and EWOULDBLOCK may be identical; we choose message for EAGAIN
+	if (error == RBC_ERROR_RESOURCE_UNAVAILABLE_TRY_AGAIN) {
+		return "Resource unavailable, try again";
 	}
 
-	if (error == RBC_ERROR_NOT_IMPLEMENTED) {
-		return "Not implemented";
-	}
+	switch (error) {
+		case RBC_ERROR_UNKNOWN                           : return "Unknown error";
+		case RBC_ERROR_NOT_IMPLEMENTED                   : return "Not implemented";
+		case RBC_ERROR_OK                                : return "Ok";
+		case RBC_ERROR_ADDRESS_FAMILY_NOT_SUPPORTED      : return "Address family not supported";
+		case RBC_ERROR_ADDRESS_IN_USE                    : return "Address in use";
+		case RBC_ERROR_ADDRESS_NOT_AVAILABLE             : return "Address not available";
+		case RBC_ERROR_ALREADY_CONNECTED                 : return "Socket is connected";
+		case RBC_ERROR_ARGUMENT_LIST_TOO_LONG            : return "Argument list too long";
+		case RBC_ERROR_ARGUMENT_OUT_OF_DOMAIN            : return "Mathematics argument out of domain of function";
+		case RBC_ERROR_BAD_ADDRESS                       : return "Bad address";
+		case RBC_ERROR_BAD_FILE_DESCRIPTOR               : return "Bad file descriptor";
+		case RBC_ERROR_BAD_MESSAGE                       : return "Bad message";
+		case RBC_ERROR_BROKEN_PIPE                       : return "Broken pipe";
+		case RBC_ERROR_CONNECTION_ABORTED                : return "Connection aborted";
+		case RBC_ERROR_CONNECTION_ALREADY_IN_PROGRESS    : return "Connection already in progress";
+		case RBC_ERROR_CONNECTION_REFUSED                : return "Connection refused";
+		case RBC_ERROR_CONNECTION_RESET                  : return "Connection reset";
+		case RBC_ERROR_CROSS_DEVICE_LINK                 : return "Improper link";
+		case RBC_ERROR_DESTINATION_ADDRESS_REQUIRED      : return "Destination address required";
+		case RBC_ERROR_DEVICE_OR_RESOURCE_BUSY           : return "Device or resource busy";
+		case RBC_ERROR_DIRECTORY_NOT_EMPTY               : return "Directory not empty";
+		case RBC_ERROR_EXECUTABLE_FORMAT_ERROR           : return "Executable file format error";
+		case RBC_ERROR_FILE_EXISTS                       : return "File exists";
+		case RBC_ERROR_FILE_TOO_LARGE                    : return "File too large";
+		case RBC_ERROR_FILENAME_TOO_LONG                 : return "Filename too long";
+		case RBC_ERROR_FUNCTION_NOT_SUPPORTED            : return "Function not supported";
+		case RBC_ERROR_HOST_UNREACHABLE                  : return "Host is unreachable";
+		case RBC_ERROR_IDENTIFIER_REMOVED                : return "Identifier removed";
+		case RBC_ERROR_ILLEGAL_BYTE_SEQUENCE             : return "Illegal byte sequence";
+		case RBC_ERROR_INAPPROPRIATE_IO_CONTROL_OPERATION: return "Inappropriate I/O control operation";
+		case RBC_ERROR_INTERRUPTED                       : return "Interrupted function call";
+		case RBC_ERROR_INVALID_ARGUMENT                  : return "Invalid argument";
+		case RBC_ERROR_INVALID_SEEK                      : return "Invalid seek";
+		case RBC_ERROR_IO_ERROR                          : return "Input/output error";
+		case RBC_ERROR_IS_A_DIRECTORY                    : return "Is a directory";
+		case RBC_ERROR_MESSAGE_SIZE                      : return "Message too long";
+		case RBC_ERROR_NETWORK_DOWN                      : return "Network is down";
+		case RBC_ERROR_NETWORK_RESET                     : return "Connection aborted by network";
+		case RBC_ERROR_NETWORK_UNREACHABLE               : return "Network unreachable";
+		case RBC_ERROR_NO_BUFFER_SPACE                   : return "No buffer space available";
+		case RBC_ERROR_NO_CHILD_PROCESS                  : return "No child processes";
+		case RBC_ERROR_NO_LINK                           : return "Link has been severed";
+		case RBC_ERROR_NO_LOCK_AVAILABLE                 : return "No locks available";
+		case RBC_ERROR_NO_MESSAGE                        : return "No message of the desired type";
+		case RBC_ERROR_NO_PROTOCOL_OPTION                : return "Protocol not available";
+		case RBC_ERROR_NO_SPACE_ON_DEVICE                : return "No space left on device";
+		case RBC_ERROR_NO_STREAM_RESOURCES               : return "No stream resources";
+		case RBC_ERROR_NO_SUCH_DEVICE_OR_ADDRESS         : return "No such device or address";
+		case RBC_ERROR_NO_SUCH_DEVICE                    : return "No such device";
+		case RBC_ERROR_NO_SUCH_FILE_OR_DIRECTORY         : return "No such file or directory";
+		case RBC_ERROR_NO_SUCH_PROCESS                   : return "No such process";
+		case RBC_ERROR_NOT_A_DIRECTORY                   : return "Not a directory";
+		case RBC_ERROR_NOT_A_SOCKET                      : return "Not a socket";
+		case RBC_ERROR_NOT_A_STREAM                      : return "Not a stream";
+		case RBC_ERROR_NOT_CONNECTED                     : return "The socket is not connected";
+		case RBC_ERROR_NOT_ENOUGH_MEMORY                 : return "Not enough space";
+		case RBC_ERROR_OPERATION_CANCELED                : return "Operation canceled";
+		case RBC_ERROR_OPERATION_IN_PROGRESS             : return "Operation in progress";
+		case RBC_ERROR_OPERATION_NOT_PERMITTED           : return "Operation not permitted";
+		case RBC_ERROR_OPERATION_NOT_SUPPORTED           : return "Operation not supported on socket";
+		case RBC_ERROR_OPERATION_WOULD_BLOCK             : return "Operation would block";
+		case RBC_ERROR_OWNER_DEAD                        : return "Owner died";
+		case RBC_ERROR_PERMISSION_DENIED                 : return "Permission denied";
+		case RBC_ERROR_PROTOCOL_ERROR                    : return "Protocol error";
+		case RBC_ERROR_PROTOCOL_NOT_SUPPORTED            : return "Protocol not supported";
+		case RBC_ERROR_READ_ONLY_FILE_SYSTEM             : return "Read-only filesystem";
+		case RBC_ERROR_RESOURCE_DEADLOCK_WOULD_OCCUR     : return "Resource deadlock would occur";
+		case RBC_ERROR_RESULT_OUT_OF_RANGE               : return "Result too large";
+		case RBC_ERROR_STATE_NOT_RECOVERABLE             : return "State not recoverable";
+		// STREAM ioctl(2) timeout (POSIX.1, C++)
+		case RBC_ERROR_STREAM_TIMEOUT                    : return "Timer expired";
+		case RBC_ERROR_TEXT_FILE_BUSY                    : return "Text file busy";
+		case RBC_ERROR_TIMED_OUT                         : return "Connection timed out";
+		// on Linux, this is probably a result of encountering the /proc/sys/fs/file-max limit (see proc(5))
+		case RBC_ERROR_TOO_MANY_FILES_OPEN_IN_SYSTEM     : return "Too many open files in system";
+		/* Commonly caused by exceeding the RLIMIT_NOFILE resource limit described in getrlimit(2).
+ * Can also be caused by exceeding the limit specified in /proc/sys/fs/nr_open. */
+		// File descriptor value too large (in C++)
+		case RBC_ERROR_TOO_MANY_FILES_OPEN               : return "Too many open files";
+		case RBC_ERROR_TOO_MANY_LINKS                    : return "Too many links";
+		case RBC_ERROR_TOO_MANY_SYMBOLIC_LINK_LEVELS     : return "Too many levels of symbolic links";
+		case RBC_ERROR_VALUE_TOO_LARGE                   : return "Value too large to be stored in data type";
+		case RBC_ERROR_WRONG_PROTOCOL_TYPE               : return "Protocol wrong type for socket";
 
-	if (error == RBC_ERROR_OK) {
-		return "Ok";
-	}
+		// very long description breaks formatting
+		case RBC_ERROR_NO_MESSAGE_AVAILABLE:
+			return "The named attribute does not exist, or the process has no access to this attribute";
 
-#ifdef _GNU_SOURCE
-	return strerrordesc_np(error);
-#else
-	return NULL;
-#endif
+		default: return "Undefined error";
+	}
 }
 
 // NOLINTBEGIN(*-security.insecureAPI.*)
@@ -190,21 +270,6 @@ bool rbc_error_to_string_s(char* buf, usize size, rbc_error error) { // NOLINT(*
 	}
 
 	char const* desc = rbc_error_to_string(error);
-	if (!desc) {
-		char tmp[RBC_TO_CHARS_RESULT_MAX_LEN + 1];
-		rbc_to_chars_result const result = rbc_to_chars(tmp, tmp + RBC_ARRAY_SIZE(tmp), (int) error);
-		usize const count = result.ptr - tmp;
-		usize const required_size = strlen(RBC_UNDEFINED_ERROR_DESC) + strlen(": ") + count;
-		if (required_size >= size) {
-			return false;
-		}
-
-		strcpy(buf, RBC_UNDEFINED_ERROR_DESC);
-		strcat(buf, ": ");
-		strcat(buf, tmp);
-		return true;
-	}
-
 	usize const len = strlen(desc);
 	if (len < size) {
 		strncpy(buf, desc, len);

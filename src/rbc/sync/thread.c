@@ -7,7 +7,7 @@
 RBC_STATIC_ASSERT(sizeof(pthread_t) <= sizeof(usize));
 
 	#include <unistd.h>
-	#ifndef RB_COMPILER_MINGW
+	#ifndef RBC_COMPILER_MINGW
 		#include <sched.h>
 	#endif
 
@@ -86,7 +86,8 @@ rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 	RBC_SYNC_CHECK(pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
 
 	if (self.impl->stack_size) {
-	#if defined(_POSIX_THREAD_ATTR_STACKSIZE) && (_POSIX_THREAD_ATTR_STACKSIZE - 0 > 0)
+	#if defined(_POSIX_THREAD_ATTR_STACKSIZE) && (_POSIX_THREAD_ATTR_STACKSIZE - 0 > 0) \
+	    || defined(RBC_COMPILER_MINGW)
 		RBC_SYNC_CHECK(pthread_attr_setstacksize(&attr, self.impl->stack_size));
 	#else
 		return RBC_ERROR_FUNCTION_NOT_SUPPORTED;
@@ -99,18 +100,29 @@ rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 }
 
 rbc_error rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, int* exit_code) {
-	rbc_time deadline = rbc_time_deadline_from_timeout(timeout);
+	rbc_time const deadline = rbc_time_deadline_from_timeout(timeout);
 	return rbc_thread_wait_until_with_code(self, deadline, exit_code);
 }
 
 rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, int* exit_code) {
+	#ifdef RBC_COMPILER_MINGW
+
+	RBC_UNUSED(self);
+	RBC_UNUSED(deadline);
+	RBC_UNUSED(exit_code);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+
+	#else
+
 	void* ret_code = NULL;
-	rbc_timespec ts = rbc_time_to_timespec(deadline);
+	rbc_timespec const ts = rbc_time_to_timespec(deadline);
 	int const error = pthread_timedjoin_np(RBC_SYNC_DEREF_IMPL, &ret_code, (struct timespec const*) &ts);
 	if (exit_code) {
 		*exit_code = (isize) ret_code; // NOLINT(*-narrowing-conversions)
 	}
 	return error;
+
+	#endif
 }
 
 #elif RBC_USE(WIN32_THREADS)

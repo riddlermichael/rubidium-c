@@ -22,7 +22,7 @@ typedef void (*rbc_tls_dtor_t)(void*);
  * the values associated with all TLS keys is initialized to `NULL`.
  *
  * If @p dtor is not a null pointer, then also associates the destructor which is called when the storage is released
- * by rb_os_thread_exit (but not by rbc_tls_destroy and not at program termination by `exit`).
+ * by rbc_os_thread_exit (but not by rbc_tls_destroy and not at program termination by `exit`).
  *
  * A call to rbc_tls_init from within a thread-local storage destructor results in undefined behavior.
  * @param self  pointer to memory location to store the new thread-local storage key
@@ -34,7 +34,7 @@ RBC_EXPORT rbc_error rbc_tls_init(rbc_tls* self, rbc_tls_dtor_t dtor) RBC_NONNUL
  * Destroys the thread-local storage identified by @p self.
  *
  * The destructor, if one was registered by rbc_tls_init, is not called
- * (they are only called at thread exit, either by rb_os_thread_exit or by returning from the thread function),
+ * (they are only called at thread exit, either by rbc_os_thread_exit or by returning from the thread function),
  * it is the responsibility of the programmer to ensure that every thread that is aware of @p self
  * performed all necessary cleanup, before the call to rbc_tls_destroy is made.
  *
@@ -50,7 +50,7 @@ RBC_EXPORT rbc_error rbc_tls_destroy(rbc_tls* self) RBC_NONNULL;
  * Returns the value held in thread-local storage for the current thread identified by @p self.
  * Different threads may get different values identified by the same key.
  *
- * On thread startup (see rb_os_thread_create), the values associated with all TLS keys are `NULL`.
+ * On thread startup (see rbc_os_thread_create), the values associated with all TLS keys are `NULL`.
  * Different value may be placed in the thread-local storage with rbc_tls_set.
  */
 RBC_EXPORT rbc_error rbc_tls_get(rbc_tls self, void** value) RBC_NONNULL;

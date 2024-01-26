@@ -31,7 +31,8 @@ inline static void rbc_swap(void* lhs, void* rhs, usize size) {
 	}
 
 	#ifdef RBC_COMPILER_MSVC
-	char* storage = malloc(size);
+
+	char* storage = (char*) malloc(size);
 	if (storage) {
 		memcpy(storage, lhs, size);
 		memmove(lhs, rhs, size);
@@ -53,11 +54,14 @@ inline static void rbc_swap(void* lhs, void* rhs, usize size) {
 		#undef RBC_SWAP_BYTE
 	}
 	free(storage);
+
 	#else
+
 	char storage[size];
 	memcpy(storage, lhs, size);
 	memmove(lhs, rhs, size);
 	memcpy(rhs, storage, size);
+
 	#endif
 }
 

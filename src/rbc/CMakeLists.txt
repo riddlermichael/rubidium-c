@@ -12,8 +12,6 @@ if(NOT DEFINED CMAKE_C_VISIBILITY_PRESET AND NOT DEFINED CMAKE_VISIBILITY_INLINE
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 endif()
 
-dump(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-
 option(BUILD_SHARED_LIBS "Build shared libraries")
 # in rare cases an user may want to build some libs in other way than BUILD_SHARED_LIBS determines
 # (for example all used libs are shared, but Rubidium should be built as static)

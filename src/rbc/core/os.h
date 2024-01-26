@@ -56,13 +56,10 @@
 	#define RBC_OS_LINUX
 #elif defined(__CYGWIN__)
 	#define RBC_OS_CYGWIN
-#elif !defined(SAG_COM) &&                                                     \
-    (!defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP) && \
-    (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))
+#elif !defined(SAG_COM) && (!defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP) && (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))
 	#define RBC_OS_WIN32
 	#define RBC_OS_WIN64
-#elif !defined(SAG_COM) && \
-    (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
+#elif !defined(SAG_COM) && (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
 	#if defined(WINAPI_FAMILY)
 		#ifndef WINAPI_FAMILY_PC_APP
 			#define WINAPI_FAMILY_PC_APP WINAPI_FAMILY_APP
@@ -111,6 +108,7 @@
 	#error "Unsupported OS"
 #endif
 
-#if defined(RBC_OS_WIN32) || defined(RBC_OS_WIN64) || defined(RBC_OS_WINRT)
+#if defined(RBC_OS_WIN32) || defined(RBC_OS_WIN64) || defined(RBC_OS_WINRT) \
+    || defined(RBC_OS_CYGWIN)
 	#define RBC_OS_WIN
 #endif

@@ -7,6 +7,7 @@
 #include <rbc/core/extern.h>
 #include <rbc/core/types.h>
 
+/// @see https://learn.microsoft.com/en-us/cpp/c-runtime-library/errno-constants?view=msvc-170
 enum rbc_error {
 	RBC_ERROR_OK = 0,
 	// our error codes; all must be negative
