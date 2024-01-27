@@ -46,4 +46,6 @@
 - [ ] duration
   - [ ] reduce size to 12 bytes 
   - [ ] division
-  - [ ] conversions
+  - [ ] conversions to s/ns/...
+  - [ ] to/from string
+- [ ] time to/from string

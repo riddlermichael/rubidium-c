@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rbc/core/processor.h>
+#include <rbc/core/types.h>
 
 #define RBC_I8_MIN (-127 - 1)
 #define RBC_I8_MAX 127

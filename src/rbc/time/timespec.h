@@ -6,6 +6,10 @@
 #include <rbc/core/extern.h>
 #include <rbc/core/keywords.h>
 
+enum {
+	RBC_NANOSECONDS_PER_SECOND = 1000000000
+};
+
 /// Structure holding an interval broken down into seconds and nanoseconds.
 /// Replacement for `timespec` in C11.
 struct rbc_timespec {

@@ -1,11 +1,8 @@
 #pragma once
 
-#include <rbc/core/compiler.h>
+#include <rbc/core/macros.h>
 
 #ifdef RBC_COMPILER_GCC_LIKE
-
-	#include <rbc/core/keywords.h>
-	#include <rbc/core/macros.h>
 
 	#define RBC_SWAP(lhs, rhs)                                           \
 		do {                                                             \
@@ -25,7 +22,7 @@
 
 	#include <rbc/core/types.h>
 
-inline static void rbc_swap(void* lhs, void* rhs, usize size) {
+inline static void rbc_swap_impl(void* lhs, void* rhs, usize size) {
 	if (lhs == rhs) {
 		return;
 	}
@@ -65,13 +62,11 @@ inline static void rbc_swap(void* lhs, void* rhs, usize size) {
 	#endif
 }
 
-/* TODO improve for primitive types using _Generic */
-
 	#define RBC_SWAP(lhs, rhs)                              \
 		do {                                                \
 			RBC_STATIC_ASSERT_X(sizeof(lhs) == sizeof(rhs), \
 			    "lhs and rhs have different sizes");        \
-			rbc_swap(&(lhs), &(rhs), sizeof(lhs));          \
+			rbc_swap_impl(&(lhs), &(rhs), sizeof(lhs));     \
 		} while (0)
 
 #endif

@@ -16,19 +16,22 @@ typedef struct rbc_duration rbc_duration;
 		.secs = 0, .ticks = 0 \
 	}
 
-#define RBC_DURATION_INF                \
-	(rbc_duration) {                    \
-		.secs = INT64_MAX, .ticks = ~0U \
+#define RBC_INF_TICKS (~(u32) 0U)
+
+#define RBC_DURATION_INF                          \
+	(rbc_duration) {                              \
+		.secs = INT64_MAX, .ticks = RBC_INF_TICKS \
 	}
 
-#define RBC_DURATION_NEG_INF            \
-	(rbc_duration) {                    \
-		.secs = INT64_MIN, .ticks = ~0U \
+#define RBC_DURATION_NEG_INF                      \
+	(rbc_duration) {                              \
+		.secs = INT64_MIN, .ticks = RBC_INF_TICKS \
 	}
 
-// avoid compiler warnings about magic numbers
+#define RBC_TICKS_PER_SECOND ((u32) 4000000000U)
+#define RBC_TICKS_PER_NANOSECOND 4
+
 enum {
-	RBC_NANOSECONDS_PER_SECOND = 1000000000,
 	RBC_MICROSECONDS_PER_SECOND = 1000000,
 	RBC_MILLISECONDS_PER_SECOND = 1000,
 	RBC_SECONDS_PER_MINUTE = 60,
@@ -67,6 +70,7 @@ RBC_EXPORT rbc_duration rbc_duration_sub(rbc_duration lhs, rbc_duration rhs);
 // conversions
 RBC_EXPORT rbc_timespec rbc_duration_to_timespec(rbc_duration self);
 RBC_EXPORT rbc_duration rbc_duration_from_timespec(rbc_timespec ts);
+RBC_EXPORT rbc_duration rbc_duration_from_std_timespec(std_timespec ts);
 
 RBC_EXPORT RBC_CONST i64 rbc_duration_to_ns(rbc_duration self);
 RBC_EXPORT RBC_CONST i64 rbc_duration_to_us(rbc_duration self);

@@ -77,7 +77,7 @@ rbc_error rbc_mutex_init(rbc_mutex* self) {
 	 * Starting with Windows Vista, this exception was eliminated and InitializeCriticalSection always succeeds,
 	 * even in low memory situations.
 	 */
-	#if _WIN32_WINNT >= 0x0600
+	#if _WIN32_WINNT >= _WIN32_WINNT_VISTA
 	InitializeCriticalSection(RBC_SYNC_IMPL_PTR);
 	#else
 	__try {

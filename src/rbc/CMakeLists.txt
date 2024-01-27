@@ -2,16 +2,6 @@ set(RBC_HOME ${ROOT_DIR} CACHE PATH "rbc home" FORCE)
 set(RBC_ROOT_DIR "${RBC_HOME}/rbc" CACHE PATH "rbc root" FORCE)
 set(PRODUCT_NAME rbc)
 
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED True)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-if(NOT DEFINED CMAKE_C_VISIBILITY_PRESET AND NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
-    set(CMAKE_C_VISIBILITY_PRESET hidden)
-    set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
-endif()
-
 option(BUILD_SHARED_LIBS "Build shared libraries")
 # in rare cases an user may want to build some libs in other way than BUILD_SHARED_LIBS determines
 # (for example all used libs are shared, but Rubidium should be built as static)
