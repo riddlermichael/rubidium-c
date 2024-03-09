@@ -1,6 +1,9 @@
 #pragma once
 
+/// Used for macro's arguments.
 #define RBC_STRINGIFY_X(x) RBC_STRINGIFY(x)
+
+///
 #define RBC_STRINGIFY(x) #x
 
 /// Used to mark (possibly) unused variables.

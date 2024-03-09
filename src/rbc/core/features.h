@@ -3,7 +3,7 @@
 #include <rbc/core/keywords.h>
 
 /**
- * The RBC_ENABLED macro implements a safe compile time check for features of RBC.
+ * The RBC_ENABLED macro implements a safe compile time check for features of Rubidium-C.
  * Features can be in three states:
  * <ul>
  * <li> 0 or undefined: this will lead to a compile error when testing for it

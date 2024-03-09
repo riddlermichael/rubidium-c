@@ -52,6 +52,9 @@ elseif(${COMPILER_MSVC})
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP${CMAKE_CXX_MP_NUM_PROCESSORS}")
 
     add_compile_options(/analyze)
-    add_compile_options(/wd4068) # disable "unknown pragma" warnings
-    add_compile_options(/wd6320) # disable "exception-filter expression is the constant EXCEPTION_EXECUTE_HANDLER" warnings
+    add_compile_options(/W4)
+    # disable "unknown pragma" warnings
+    add_compile_options(/wd4068)
+    # disable "exception-filter expression is the constant EXCEPTION_EXECUTE_HANDLER" warnings
+    add_compile_options(/wd6320)
 endif()

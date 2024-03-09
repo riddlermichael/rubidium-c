@@ -7,10 +7,7 @@
 	#include <Windows.h>
 #endif
 
-#include <rbc/core/macros.h>
 #include <rbc/utils/charconv.h>
-
-#define RBC_UNDEFINED_ERROR_DESC "Undefined error"
 
 #ifdef RBC_OS_WIN
 
@@ -78,7 +75,6 @@ static rbc_error rbc_error_from_get_last_error(DWORD code) {
 		case ERROR_PIPE_BUSY                 : return RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 
 		case ERROR_SHARING_BUFFER_EXCEEDED   : return RBC_ERROR_NO_LOCK_AVAILABLE;
-		case ERROR_HANDLE_EOF                : return RBC_ERROR_NO_MESSAGE_AVAILABLE;
 
 		case ERROR_HANDLE_DISK_FULL          :
 		case ERROR_DISK_FULL                 : return RBC_ERROR_NO_SPACE_ON_DEVICE;
@@ -148,9 +144,7 @@ rbc_error rbc_error_from_error_code(rbc_error_code code) {
 #ifdef RBC_OS_WIN
 	return rbc_error_from_get_last_error(code);
 #else
-	return code >= RBC_ERROR_MIN && code <= RBC_ERROR_MAX
-	         ? code
-	         : RBC_ERROR_UNKNOWN;
+	return code;
 #endif
 }
 
@@ -216,14 +210,12 @@ char const* rbc_error_to_string(rbc_error error) {
 		case RBC_ERROR_NO_MESSAGE                        : return "No message of the desired type";
 		case RBC_ERROR_NO_PROTOCOL_OPTION                : return "Protocol not available";
 		case RBC_ERROR_NO_SPACE_ON_DEVICE                : return "No space left on device";
-		case RBC_ERROR_NO_STREAM_RESOURCES               : return "No stream resources";
 		case RBC_ERROR_NO_SUCH_DEVICE_OR_ADDRESS         : return "No such device or address";
 		case RBC_ERROR_NO_SUCH_DEVICE                    : return "No such device";
 		case RBC_ERROR_NO_SUCH_FILE_OR_DIRECTORY         : return "No such file or directory";
 		case RBC_ERROR_NO_SUCH_PROCESS                   : return "No such process";
 		case RBC_ERROR_NOT_A_DIRECTORY                   : return "Not a directory";
 		case RBC_ERROR_NOT_A_SOCKET                      : return "Not a socket";
-		case RBC_ERROR_NOT_A_STREAM                      : return "Not a stream";
 		case RBC_ERROR_NOT_CONNECTED                     : return "The socket is not connected";
 		case RBC_ERROR_NOT_ENOUGH_MEMORY                 : return "Not enough space";
 		case RBC_ERROR_OPERATION_CANCELED                : return "Operation canceled";
@@ -239,8 +231,6 @@ char const* rbc_error_to_string(rbc_error error) {
 		case RBC_ERROR_RESOURCE_DEADLOCK_WOULD_OCCUR     : return "Resource deadlock would occur";
 		case RBC_ERROR_RESULT_OUT_OF_RANGE               : return "Result too large";
 		case RBC_ERROR_STATE_NOT_RECOVERABLE             : return "State not recoverable";
-		// STREAM ioctl(2) timeout (POSIX.1, C++)
-		case RBC_ERROR_STREAM_TIMEOUT                    : return "Timer expired";
 		case RBC_ERROR_TEXT_FILE_BUSY                    : return "Text file busy";
 		case RBC_ERROR_TIMED_OUT                         : return "Connection timed out";
 		// on Linux, this is probably a result of encountering the /proc/sys/fs/file-max limit (see proc(5))
@@ -254,11 +244,7 @@ char const* rbc_error_to_string(rbc_error error) {
 		case RBC_ERROR_VALUE_TOO_LARGE                   : return "Value too large to be stored in data type";
 		case RBC_ERROR_WRONG_PROTOCOL_TYPE               : return "Protocol wrong type for socket";
 
-		// very long description breaks formatting
-		case RBC_ERROR_NO_MESSAGE_AVAILABLE:
-			return "The named attribute does not exist, or the process has no access to this attribute";
-
-		default: return "Undefined error";
+		default                                          : return "Undefined error";
 	}
 }
 

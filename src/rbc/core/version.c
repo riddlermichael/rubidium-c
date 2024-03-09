@@ -10,9 +10,7 @@ rbc_version rbc_version_unpack(u32 value) {
 }
 
 u32 rbc_version_pack(rbc_version version) {
-	return ((version.major & 0xFF) << 24) |
-	    ((version.minor & 0xFF) << 16) |
-	    (version.patch & 0xFFFF);
+	return ((version.major & 0xFF) << 24) | ((version.minor & 0xFF) << 16) | (version.patch & 0xFFFF);
 }
 
 rbc_version rbc_version_bump(rbc_version version, rbc_version_component component) {
@@ -25,9 +23,7 @@ rbc_version rbc_version_bump(rbc_version version, rbc_version_component componen
 }
 
 bool rbc_version_eq(rbc_version lhs, rbc_version rhs) {
-	return lhs.major == rhs.major &&
-	    lhs.minor == rhs.minor &&
-	    lhs.patch == rhs.patch;
+	return lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch;
 }
 
 bool rbc_version_ne(rbc_version lhs, rbc_version rhs) {
@@ -51,11 +47,7 @@ bool rbc_version_lt(rbc_version lhs, rbc_version rhs) {
 		return false;
 	}
 
-	if (lhs.patch < rhs.patch) {
-		return true;
-	}
-
-	return false;
+	return lhs.patch < rhs.patch;
 }
 
 bool rbc_version_le(rbc_version lhs, rbc_version rhs) {

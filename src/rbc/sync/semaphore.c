@@ -1,9 +1,8 @@
 #include "semaphore.h"
 
-#include <rbc/core/os.h>
 #include <rbc/sync/impl.h>
 
-#if defined(RBC_OS_LINUX)
+#if RBC_USE(PTHREADS)
 
 	#include <semaphore.h> // NOLINT(*-duplicate-include)
 
@@ -58,8 +57,8 @@ rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
 rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
 	DWORD const rc = WaitForSingleObject(RBC_SYNC_DEREF_IMPL, INFINITE);
 	switch (rc) {
-		case WAIT_OBJECT_0: return RBC_ERROR_OK;
 		case WAIT_FAILED  : return rbc_error_from_last_error();
+		case WAIT_OBJECT_0: return RBC_ERROR_OK;
 		default           : return RBC_ERROR_UNKNOWN;
 	}
 }
@@ -67,8 +66,8 @@ rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
 rbc_error rbc_semaphore_try_acquire(rbc_semaphore self) {
 	DWORD const rc = WaitForSingleObject(RBC_SYNC_DEREF_IMPL, 0);
 	switch (rc) {
-		case WAIT_OBJECT_0: return RBC_ERROR_OK;
 		case WAIT_FAILED  : return rbc_error_from_last_error();
+		case WAIT_OBJECT_0: return RBC_ERROR_OK;
 		case WAIT_TIMEOUT : return RBC_ERROR_RESOURCE_UNAVAILABLE_TRY_AGAIN;
 		default           : return RBC_ERROR_UNKNOWN;
 	}

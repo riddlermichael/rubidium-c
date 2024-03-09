@@ -1,7 +1,5 @@
 #pragma once
 
-#include <rbc/core/helpers.h>
-
 #if defined(_MSC_VER)
 	#define RBC_COMPILER_MSVC
 	#ifdef __clang__

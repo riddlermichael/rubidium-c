@@ -12,7 +12,7 @@
 ### `core`
 
 - [ ] `i128`/`u128`
-- [ ] use of SAL annotations
+- [ ] SAL annotations
 - [ ] meta-types
 - [ ] safe opCmp
 
@@ -49,3 +49,6 @@
   - [ ] conversions to s/ns/...
   - [ ] to/from string
 - [ ] time to/from string
+
+### Unsorted
+- [ ] `RBC_CONST` and `RBC_PURE` where possible

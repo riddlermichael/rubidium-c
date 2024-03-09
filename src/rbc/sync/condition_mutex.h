@@ -34,7 +34,7 @@ RBC_EXPORT rbc_error rbc_condition_mutex_unlock(rbc_condition_mutex self) RBC_RE
 RBC_EXPORT rbc_error rbc_condition_mutex_await(rbc_condition_mutex self, rbc_condition condition);
 RBC_EXPORT rbc_error rbc_condition_mutex_await_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
 RBC_EXPORT rbc_error rbc_condition_mutex_await_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_when(rbc_condition_mutex self, rbc_condition condition);
+RBC_EXPORT rbc_error rbc_condition_mutex_lock_when(rbc_condition_mutex self, rbc_condition condition) RBC_ACQUIRE_CAPABILITY(self);
 RBC_EXPORT rbc_error rbc_condition_mutex_lock_when_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
 RBC_EXPORT rbc_error rbc_condition_mutex_lock_when_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
 

@@ -40,26 +40,32 @@
 #define RBC_F64_MAX 0x1.fffffffffffffp1023
 #define RBC_F64_INF __builtin_huge_val()
 
-#define RBC_MIN(T) _Generic((T) 0, \
-	i8: RBC_I8_MIN,                \
-	i16: RBC_I16_MIN,              \
-	i32: RBC_I32_MIN,              \
-	i64: RBC_I64_MIN,              \
-	u8: RBC_U8_MIN,                \
-	u16: RBC_U16_MIN,              \
-	u32: RBC_U32_MIN,              \
-	u64: RBC_U64_MIN,              \
-	f32: RBC_F32_MIN,              \
-	f64: RBC_F64_MIN)
+#ifndef __cplusplus
 
-#define RBC_MAX(T) _Generic((T) 0, \
-	i8: RBC_I8_MAX,                \
-	i16: RBC_I16_MAX,              \
-	i32: RBC_I32_MAX,              \
-	i64: RBC_I64_MAX,              \
-	u8: RBC_U8_MAX,                \
-	u16: RBC_U16_MAX,              \
-	u32: RBC_U32_MAX,              \
-	u64: RBC_U64_MAX,              \
-	f32: RBC_F32_MAX,              \
-	f64: RBC_F64_MAX)
+	#define RBC_MIN(T)        \
+		_Generic((T) 0,       \
+		    i8: RBC_I8_MIN,   \
+		    i16: RBC_I16_MIN, \
+		    i32: RBC_I32_MIN, \
+		    i64: RBC_I64_MIN, \
+		    u8: RBC_U8_MIN,   \
+		    u16: RBC_U16_MIN, \
+		    u32: RBC_U32_MIN, \
+		    u64: RBC_U64_MIN, \
+		    f32: RBC_F32_MIN, \
+		    f64: RBC_F64_MIN)
+
+	#define RBC_MAX(T)        \
+		_Generic((T) 0,       \
+		    i8: RBC_I8_MAX,   \
+		    i16: RBC_I16_MAX, \
+		    i32: RBC_I32_MAX, \
+		    i64: RBC_I64_MAX, \
+		    u8: RBC_U8_MAX,   \
+		    u16: RBC_U16_MAX, \
+		    u32: RBC_U32_MAX, \
+		    u64: RBC_U64_MAX, \
+		    f32: RBC_F32_MAX, \
+		    f64: RBC_F64_MAX)
+
+#endif

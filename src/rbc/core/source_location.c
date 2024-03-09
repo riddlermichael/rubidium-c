@@ -1,5 +1,7 @@
 #include "source_location.h"
 
+#include <rbc/core/helpers.h>
+
 void rbc_source_location_print(rbc_source_location loc) {
 	rbc_source_location_print_to(loc, stdout);
 }

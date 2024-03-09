@@ -9,6 +9,7 @@
 #endif
 
 #include <rbc/core/error.h>
+#include <rbc/core/helpers.h>
 #include <rbc/core/os.h>
 
 #define RBC_SYNC_GET_IMPL(self) &(self).impl->impl

@@ -19,7 +19,7 @@ rbc_error rbc_barrier_destroy(rbc_barrier* self) {
 
 rbc_error rbc_barrier_wait(rbc_barrier self) {
 	int const error = pthread_barrier_wait(RBC_SYNC_IMPL);
-	return (error == PTHREAD_BARRIER_SERIAL_THREAD) ? RBC_ERROR_OK : error;
+	return (!error || error == PTHREAD_BARRIER_SERIAL_THREAD) ? RBC_ERROR_OK : error;
 }
 
 #elif RBC_USE(WIN32_THREADS)
@@ -36,6 +36,8 @@ rbc_error rbc_barrier_init(rbc_barrier* self, unsigned count) {
 	 * [in]  LONG                      lTotalThreads,
 	 * [in]  LONG                      lSpinCount
 	 * );
+	 *
+	 * [in] lSpinCount
 	 * The number of times an individual thread should spin while waiting for other threads to arrive at the barrier.
 	 * If this parameter is -1, the thread spins 2000 times.
 	 * If the thread exceeds lSpinCount, the thread blocks unless it called EnterSynchronizationBarrier

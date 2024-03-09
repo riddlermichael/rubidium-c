@@ -10,7 +10,7 @@ struct rbc_spinlock_impl {
 
 rbc_error rbc_spinlock_init(rbc_spinlock* self) {
 	RBC_SYNC_INIT(rbc_spinlock);
-	RBC_SYNC_CHECK_INIT(pthread_spin_init(RBC_SYNC_IMPL_PTR, false));
+	RBC_SYNC_CHECK_INIT(pthread_spin_init(RBC_SYNC_IMPL_PTR, PTHREAD_PROCESS_PRIVATE));
 }
 
 rbc_error rbc_spinlock_destroy(rbc_spinlock* self) {

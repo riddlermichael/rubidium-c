@@ -70,7 +70,6 @@ struct rbc_mutex_impl {
 
 rbc_error rbc_mutex_init(rbc_mutex* self) {
 	RBC_SYNC_INIT(rbc_mutex);
-
 	/**
 	 * Windows Server 2003 and Windows XP:
 	 * In low memory situations, InitializeCriticalSection can raise a STATUS_NO_MEMORY exception.
@@ -90,8 +89,11 @@ rbc_error rbc_mutex_init(rbc_mutex* self) {
 }
 
 rbc_error rbc_mutex_destroy(rbc_mutex* self) {
-	DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
-	RBC_SYNC_DESTROY(RBC_ERROR_OK);
+	if (self->impl) {
+		DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
+		free(self->impl);
+	}
+	return RBC_ERROR_OK;
 }
 
 rbc_error rbc_mutex_lock(rbc_mutex self) {
@@ -103,6 +105,7 @@ rbc_error rbc_mutex_lock(rbc_mutex self) {
 	 */
 	__try {
 		EnterCriticalSection(RBC_SYNC_IMPL);
+		// ReSharper disable once CppDFAUnreachableCode
 	} __except (EXCEPTION_EXECUTE_HANDLER) {
 		return RBC_ERROR_RESOURCE_DEADLOCK_WOULD_OCCUR;
 	}

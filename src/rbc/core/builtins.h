@@ -17,7 +17,7 @@
 		#define RBC_HAS_BUILTIN_COLUMN 1
 	#else
 		#define RBC_BUILTIN_COLUMN 0
-		#define RBC_HAS_BUILTIN_COLUMN -1
+		#define RBC_HAS_BUILTIN_COLUMN (-1)
 	#endif
 	#define RBC_BUILTIN_FUNCSIG __builtin_FUNCTION()
 	#define RBC_HAS_BUILTIN_SOURCE_LOCATION 1
@@ -36,8 +36,8 @@
 		#define RBC_BUILTIN_FUNCTION "<unknown>"
 		#define RBC_BUILTIN_COLUMN 0
 		#define RBC_BUILTIN_FUNCSIG __FUNCSIG__
-		#define RBC_HAS_BUILTIN_SOURCE_LOCATION -1
-		#define RBC_HAS_BUILTIN_COLUMN -1
+		#define RBC_HAS_BUILTIN_SOURCE_LOCATION (-1)
+		#define RBC_HAS_BUILTIN_COLUMN (-1)
 	#endif
 #else
 	#define RBC_BUILTIN_FILE __FILE__
@@ -45,8 +45,8 @@
 	#define RBC_BUILTIN_FUNCTION __func__
 	#define RBC_BUILTIN_COLUMN 0
 	#define RBC_BUILTIN_FUNCSIG __func__
-	#define RBC_HAS_BUILTIN_SOURCE_LOCATION -1
-	#define RBC_HAS_BUILTIN_COLUMN -1
+	#define RBC_HAS_BUILTIN_SOURCE_LOCATION (-1)
+	#define RBC_HAS_BUILTIN_COLUMN (-1)
 #endif
 
 #if defined(RBC_COMPILER_MSVC)

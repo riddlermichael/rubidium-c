@@ -83,6 +83,8 @@ inline static RBC_CONST RBC_NOTHROW f64 rbc_bswap_f64(f64 value) {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
+#ifndef __cplusplus
+
 // clang-format off
 #define rbc_bswap(value) \
 	_Generic((value), \
@@ -98,6 +100,8 @@ inline static RBC_CONST RBC_NOTHROW f64 rbc_bswap_f64(f64 value) {
 		  	 f64 : rbc_bswap_f64  \
  	)(value)
 // clang-format on
+
+#endif
 
 #if RBC_IS_LITTLE_ENDIAN
 
