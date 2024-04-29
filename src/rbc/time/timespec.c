@@ -30,13 +30,9 @@ rbc_timespec rbc_timespec_get(void) {
 	return (rbc_timespec){secs, nsecs};
 }
 
-	#undef RBC_NANOSECONDS_PER_WIN_TICK
-	#undef RBC_WIN_TICKS_PER_SECOND
-	#undef RBC_WIN_TICKS_FROM_1601_TO_UNIX_EPOCH
-
 rbc_timespec rbc_timespec_getres(void) {
 	LARGE_INTEGER freq;
-	#if _WIN32_WINNT >= _WIN32_WINNT_VISTA
+	#if _WIN32_WINNT >= 0x0600
 	QueryPerformanceFrequency(&freq);
 	#else
 	if (!QueryPerformanceFrequency(&freq)) {
@@ -48,6 +44,10 @@ rbc_timespec rbc_timespec_getres(void) {
 	ts.tv_nsec = (long) ((RBC_NANOSECONDS_PER_SECOND + (freq.QuadPart / 2)) / freq.QuadPart);
 	return ts;
 }
+
+	#undef RBC_NANOSECONDS_PER_WIN_TICK
+	#undef RBC_WIN_TICKS_PER_SECOND
+	#undef RBC_WIN_TICKS_FROM_1601_TO_UNIX_EPOCH
 
 #else
 
