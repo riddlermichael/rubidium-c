@@ -22,7 +22,7 @@ rbc_error rbc_mutex_init(rbc_mutex* self) {
 	RBC_SYNC_CHECK(pthread_mutexattr_init(&attr));
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
 
-	#if !defined(RBC_COMPILER_MINGW) && (!defined(RBC_COMPILER_GCC) || !defined(RBC_OS_CYGWIN))
+	#if !defined(RBC_COMPILER_MINGW) && (!defined(RBC_COMPILER_GCC) || !defined(RBC_OS_CYGWIN)) && !defined(RBC_OS_DARWIN)
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
 
@@ -50,8 +50,14 @@ rbc_error rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) RBC_NO_THREAD
 }
 
 rbc_error rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_SAFETY_ANALYSIS {
+	#ifndef RBC_OS_DARWIN
 	rbc_timespec const ts = rbc_time_to_timespec(deadline);
 	return pthread_mutex_timedlock(RBC_SYNC_IMPL, (struct timespec const*) &ts);
+	#else
+	RBC_UNUSED(self);
+	RBC_UNUSED(deadline);
+	return RBC_ERROR_NOT_IMPLEMENTED;
+	#endif
 }
 
 rbc_error rbc_mutex_try_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {

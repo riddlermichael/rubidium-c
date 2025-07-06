@@ -21,9 +21,8 @@ rbc_error rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind ki
 	pthread_rwlockattr_t attr;
 	RBC_SYNC_CHECK(pthread_rwlockattr_init(&attr));
 
-	#ifdef RBC_OS_WIN
 	RBC_UNUSED(kind);
-	#else
+	#ifdef RBC_OS_LINUX
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_rwlockattr_setkind_np(&attr, kind));
 	#endif
 

@@ -4,6 +4,8 @@
 
 #if RBC_USE(PTHREADS)
 
+#ifdef _POSIX_SPIN_LOCKS
+
 struct rbc_spinlock_impl {
 	pthread_spinlock_t impl;
 };
@@ -28,6 +30,8 @@ rbc_error rbc_spinlock_try_lock(rbc_spinlock self) RBC_NO_THREAD_SAFETY_ANALYSIS
 rbc_error rbc_spinlock_unlock(rbc_spinlock self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_spin_unlock(RBC_SYNC_IMPL);
 }
+
+#endif
 
 #elif RBC_USE(WIN32_THREADS)
 

@@ -112,7 +112,7 @@ rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, in
 	RBC_UNUSED(exit_code);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 
-	#else
+	#elif !defined(RBC_OS_DARWIN)
 
 	void* ret_code = NULL;
 	rbc_timespec const ts = rbc_time_to_timespec(deadline);
@@ -122,6 +122,11 @@ rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, in
 	}
 	return error;
 
+	#else
+	RBC_UNUSED(self);
+	RBC_UNUSED(deadline);
+	RBC_UNUSED(exit_code);
+	return RBC_ERROR_NOT_IMPLEMENTED;
 	#endif
 }
 

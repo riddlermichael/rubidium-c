@@ -22,7 +22,7 @@ rbc_error rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
 	RBC_SYNC_CHECK(pthread_mutexattr_init(&attr));
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
 
-	#if !defined(RBC_COMPILER_MINGW) && (!defined(RBC_COMPILER_GCC) || !defined(RBC_OS_CYGWIN))
+	#if !defined(RBC_COMPILER_MINGW) && (!defined(RBC_COMPILER_GCC) || !defined(RBC_OS_CYGWIN)) && !defined(RBC_OS_DARWIN)
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
 
@@ -50,8 +50,12 @@ rbc_error rbc_recursive_mutex_lock_for(rbc_recursive_mutex self, rbc_duration ti
 }
 
 rbc_error rbc_recursive_mutex_lock_until(rbc_recursive_mutex self, rbc_time deadline) {
+	#ifdef RBC_OS_DARWIN
+	return RBC_ERROR_NOT_IMPLEMENTED;
+	#else
 	rbc_timespec const ts = rbc_time_to_timespec(deadline);
 	return pthread_mutex_timedlock(RBC_SYNC_IMPL, (struct timespec const*) &ts);
+	#endif
 }
 
 rbc_error rbc_recursive_mutex_try_lock(rbc_recursive_mutex self) {

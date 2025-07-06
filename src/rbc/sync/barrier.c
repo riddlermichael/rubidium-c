@@ -4,6 +4,8 @@
 
 #if RBC_USE(PTHREADS)
 
+#ifdef _POSIX_BARRIERS
+
 struct rbc_barrier_impl {
 	pthread_barrier_t impl;
 };
@@ -21,6 +23,8 @@ rbc_error rbc_barrier_wait(rbc_barrier self) {
 	int const error = pthread_barrier_wait(RBC_SYNC_IMPL);
 	return (!error || error == PTHREAD_BARRIER_SERIAL_THREAD) ? RBC_ERROR_OK : error;
 }
+
+#endif
 
 #elif RBC_USE(WIN32_THREADS)
 
