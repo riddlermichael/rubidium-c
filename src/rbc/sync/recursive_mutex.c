@@ -51,6 +51,8 @@ rbc_error rbc_recursive_mutex_lock_for(rbc_recursive_mutex self, rbc_duration ti
 
 rbc_error rbc_recursive_mutex_lock_until(rbc_recursive_mutex self, rbc_time deadline) {
 	#ifdef RBC_OS_DARWIN
+	RBC_UNUSED(self);
+	RBC_UNUSED(deadline);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 	#else
 	rbc_timespec const ts = rbc_time_to_timespec(deadline);
