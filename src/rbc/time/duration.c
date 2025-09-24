@@ -4,13 +4,13 @@
 #include <rbc/core/limits.h>
 
 static rbc_duration make_duration(i64 secs, i64 ticks) {
-	return (rbc_duration){.secs = secs, .ticks = (u32) ticks};
+	return (rbc_duration) {.secs = secs, .ticks = (u32) ticks};
 }
 
 static rbc_duration make_normalized_duration(i64 secs, i64 ticks) {
 	return (ticks < 0)
-	         ? make_duration(secs - 1, ticks + RBC_TICKS_PER_SECOND)
-	         : make_duration(secs, ticks);
+	    ? make_duration(secs - 1, ticks + RBC_TICKS_PER_SECOND)
+	    : make_duration(secs, ticks);
 }
 
 static rbc_duration from_i64(i64 value, i64 ratio) {
@@ -47,16 +47,16 @@ rbc_duration rbc_duration_s(i64 s) {
 
 rbc_duration rbc_duration_min(i64 min) {
 	return min <= RBC_I64_MAX / RBC_SECONDS_PER_MINUTE && min >= RBC_I64_MIN / RBC_SECONDS_PER_MINUTE
-	         ? (rbc_duration){min * RBC_SECONDS_PER_MINUTE, 0}
-	     : min > 0 ? RBC_DURATION_INF
-	               : RBC_DURATION_NEG_INF;
+	    ? (rbc_duration) {min * RBC_SECONDS_PER_MINUTE, 0}
+	    : min > 0 ? RBC_DURATION_INF
+	              : RBC_DURATION_NEG_INF;
 }
 
 rbc_duration rbc_duration_h(i64 h) {
 	return h <= RBC_I64_MAX / RBC_SECONDS_PER_HOUR && h >= RBC_I64_MIN / RBC_SECONDS_PER_HOUR
-	         ? (rbc_duration){h * RBC_SECONDS_PER_HOUR, 0}
-	     : h > 0 ? RBC_DURATION_INF
-	             : RBC_DURATION_NEG_INF;
+	    ? (rbc_duration) {h * RBC_SECONDS_PER_HOUR, 0}
+	    : h > 0 ? RBC_DURATION_INF
+	            : RBC_DURATION_NEG_INF;
 }
 
 bool rbc_duration_is_inf(rbc_duration self) {
@@ -102,15 +102,15 @@ bool rbc_duration_ne(rbc_duration lhs, rbc_duration rhs) {
 rbc_duration rbc_duration_neg(rbc_duration self) {
 	if (self.ticks == 0) {
 		return self.secs == RBC_I64_MIN
-		         ? RBC_DURATION_INF
-		         : (rbc_duration){-self.secs, 0};
+		    ? RBC_DURATION_INF
+		    : (rbc_duration) {-self.secs, 0};
 	}
 
 	if (rbc_duration_is_inf(self)) {
 		return self.secs < 0 ? RBC_DURATION_INF : RBC_DURATION_NEG_INF;
 	}
 
-	return (rbc_duration){~self.secs, RBC_TICKS_PER_SECOND - self.ticks};
+	return (rbc_duration) {~self.secs, RBC_TICKS_PER_SECOND - self.ticks};
 }
 
 rbc_duration rbc_duration_add(rbc_duration lhs, rbc_duration rhs) {
@@ -133,7 +133,7 @@ rbc_duration rbc_duration_add(rbc_duration lhs, rbc_duration rhs) {
 		return rhs.secs < 0 ? RBC_DURATION_NEG_INF : RBC_DURATION_INF;
 	}
 
-	return (rbc_duration){.secs = secs, .ticks = ticks};
+	return (rbc_duration) {.secs = secs, .ticks = ticks};
 }
 
 rbc_duration rbc_duration_sub(rbc_duration lhs, rbc_duration rhs) {
@@ -156,7 +156,7 @@ rbc_duration rbc_duration_sub(rbc_duration lhs, rbc_duration rhs) {
 		return rhs.secs >= 0 ? RBC_DURATION_NEG_INF : RBC_DURATION_INF;
 	}
 
-	return (rbc_duration){.secs = secs, .ticks = ticks};
+	return (rbc_duration) {.secs = secs, .ticks = ticks};
 }
 
 rbc_timespec rbc_duration_to_timespec(rbc_duration self) {
@@ -192,7 +192,7 @@ rbc_timespec rbc_duration_to_timespec(rbc_duration self) {
 
 rbc_duration rbc_duration_from_timespec(rbc_timespec ts) {
 	if (RBC_LIKELY(ts.tv_nsec < RBC_NANOSECONDS_PER_SECOND)) {
-		return (rbc_duration){ts.tv_sec, ts.tv_nsec * RBC_TICKS_PER_NANOSECOND};
+		return (rbc_duration) {ts.tv_sec, ts.tv_nsec * RBC_TICKS_PER_NANOSECOND};
 	}
 
 	rbc_duration const s = rbc_duration_s(ts.tv_sec);
@@ -206,17 +206,17 @@ rbc_duration rbc_duration_from_std_timespec(std_timespec ts) {
 
 i64 rbc_duration_to_ns(rbc_duration self) {
 	return self.secs * RBC_NANOSECONDS_PER_SECOND
-	     + self.ticks / RBC_TICKS_PER_NANOSECOND;
+	    + self.ticks / RBC_TICKS_PER_NANOSECOND;
 }
 
 i64 rbc_duration_to_us(rbc_duration self) {
 	return self.secs * RBC_MICROSECONDS_PER_SECOND
-	     + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000);
+	    + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000);
 }
 
 i64 rbc_duration_to_ms(rbc_duration self) {
 	return self.secs * RBC_MILLISECONDS_PER_SECOND
-	     + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000 * 1000);
+	    + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000 * 1000);
 }
 
 i64 rbc_duration_to_s(rbc_duration self) {

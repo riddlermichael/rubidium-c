@@ -2,6 +2,7 @@ Checks: >
   bugprone-*,
   cert-*,
   clang-analyzer-*,
+  clazy-*,
   concurrency-*,
   cppcoreguidelines-*,
   google-*,
@@ -12,14 +13,18 @@ Checks: >
   portability-*,
   readability-*,
   -cert-err58-cpp,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  -clazy-function-args-by-ref,
   -cppcoreguidelines-avoid-do-while,
   -cppcoreguidelines-avoid-non-const-global-variables,
   -cppcoreguidelines-avoid-magic-numbers,
   -hicpp-signed-bitwise,
+  -misc-include-cleaner,
   -misc-use-anonymous-namespace,
   -readability-identifier-length,
   -readability-implicit-bool-conversion,
-  -readability-magic-numbers
+  -readability-magic-numbers,
+  -readability-math-missing-parentheses,
 
 FormatStyle: file
 CheckOptions:
