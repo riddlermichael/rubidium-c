@@ -24,9 +24,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Install prefix" FORCE)
 endif()
 
-# **MUST** be placed before **ANY** `add_subdirectory`
-include(CTest)
-dump(BUILD_TESTING)
+option(BUILD_TESTING "Build tests")
+if(${BUILD_TESTING})
+    include(CTest)
+    enable_testing()
+endif()
 
 add_subdirectory(src)
 

@@ -3,7 +3,6 @@
 #include <rbc/core/attributes.h>
 #include <rbc/core/export.h>
 #include <rbc/core/extern.h>
-#include <rbc/core/helpers.h>
 #include <rbc/core/keywords.h>
 #include <rbc/core/types.h>
 
@@ -19,6 +18,8 @@
 	RBC_VERSION(RBC_COMPILER_VERSION_MAJOR, RBC_COMPILER_VERSION_MINOR, RBC_COMPILER_VERSION_PATCH)
 
 #ifndef RBC_COMPILER_VERSION_STRING
+	#include <rbc/core/helpers.h>
+
 	#define RBC_MAKE_COMPILER_VERSION(major, minor, patch) \
 		RBC_STRINGIFY_X(major)                             \
 		"." RBC_STRINGIFY_X(minor) "." RBC_STRINGIFY_X(patch)

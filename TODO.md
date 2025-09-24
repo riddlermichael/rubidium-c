@@ -32,6 +32,7 @@
 - [ ] serial port listener
 
 ### `sync`
+
 - [ ] `[[nodiscard]]`
 - [ ] static mutexes
 - [ ] do we need to get actual stack size?
@@ -42,13 +43,16 @@
   - [ ] `tls` destructor
 
 ### `time`
+
 - [ ] `TIME_V2`: use `i128`
 - [ ] duration
-  - [ ] reduce size to 12 bytes 
+  - [ ] reduce size to 12 bytes
   - [ ] division
   - [ ] conversions to s/ns/...
   - [ ] to/from string
 - [ ] time to/from string
 
 ### Unsorted
+
 - [ ] `RBC_CONST` and `RBC_PURE` where possible
+- [ ] build with TinyCC
