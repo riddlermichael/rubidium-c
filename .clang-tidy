@@ -21,6 +21,7 @@ Checks: >
   -hicpp-signed-bitwise,
   -misc-include-cleaner,
   -misc-use-anonymous-namespace,
+  -readability-avoid-nested-conditional-operator,
   -readability-identifier-length,
   -readability-implicit-bool-conversion,
   -readability-magic-numbers,

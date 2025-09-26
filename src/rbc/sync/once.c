@@ -4,8 +4,8 @@
 
 #if RBC_USE(PTHREADS)
 
-rbc_error rbc_call_once(rbc_once* once, rbc_once_fn fn) {
-	return pthread_once(&once->impl, fn);
+rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) {
+	return pthread_once(&self->impl, fn);
 }
 
 #elif RBC_USE(WIN32_THREADS)

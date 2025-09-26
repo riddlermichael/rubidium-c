@@ -10,6 +10,9 @@ struct rbc_semaphore_impl {
 	sem_t impl;
 };
 
+// NOLINTBEGIN(clang-diagnostic-deprecated-declarations)
+// ReSharper disable CppDeprecatedEntity
+
 rbc_error rbc_semaphore_init(rbc_semaphore* self, unsigned count) {
 	RBC_SYNC_INIT(rbc_semaphore);
 	RBC_SYNC_CHECK_LAST_ERROR(sem_init(RBC_SYNC_IMPL_PTR, false, count));
@@ -25,6 +28,8 @@ rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
 	self->impl = NULL;
 	return error ? errno : RBC_ERROR_OK;
 }
+
+// NOLINTEND(clang-diagnostic-deprecated-declarations)
 
 rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(sem_wait(RBC_SYNC_IMPL));
