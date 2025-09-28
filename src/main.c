@@ -1,3 +1,4 @@
+// ReSharper disable CppUnusedIncludeDirective
 #include <stdio.h>
 
 #include <rbc/containers/package.h>
