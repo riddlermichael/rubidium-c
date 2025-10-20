@@ -1,5 +1,6 @@
 #include "timespec.h"
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <rbc/core/os.h>
 #include <rbc/core/types.h>
 

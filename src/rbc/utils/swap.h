@@ -22,7 +22,7 @@
 
 	#include <rbc/core/types.h>
 
-inline static void rbc_swap_impl(void* lhs, void* rhs, usize size) {
+static inline void rbc_swap_impl(void* lhs, void* rhs, usize size) {
 	if (lhs == rhs) {
 		return;
 	}

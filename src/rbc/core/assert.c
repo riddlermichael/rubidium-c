@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <rbc/core/compiler.h>
 
 #if defined(RBC_COMPILER_MSVC)

@@ -3,8 +3,8 @@ set(RBC_ROOT_DIR "${RBC_HOME}/rbc" CACHE PATH "rbc root" FORCE)
 set(PRODUCT_NAME rbc)
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
-# in rare cases an user may want to build some libs in other way than BUILD_SHARED_LIBS determines
-# (for example all used libs are shared, but Rubidium should be built as static)
+# in rare cases, a user may want to build some libraries in a way other than BUILD_SHARED_LIBS specifies
+# (for example, all used libraries are shared, but Rubidium should be compiled as a static library)
 if(DEFINED RBC_USE_SHARED_LIBS)
     set(BUILD_SHARED_LIBS "${RBC_USE_SHARED_LIBS}")
 endif()

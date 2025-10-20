@@ -11,10 +11,7 @@ struct rbc_duration {
 
 typedef struct rbc_duration rbc_duration;
 
-#define RBC_DURATION_ZERO     \
-	(rbc_duration) {          \
-		.secs = 0, .ticks = 0 \
-	}
+#define RBC_DURATION_ZERO (rbc_duration){.secs = 0, .ticks = 0}
 
 #define RBC_INF_TICKS (~(u32) 0U)
 

@@ -10,5 +10,8 @@ trim_trailing_whitespace = true
 [{.clang-format,.clang-tidy,*.json,*.yml,*.yaml}]
 indent_size = 2
 
+[*.md]
+indent_size = 2
+
 [Makefile]
 indent_style = tab

@@ -56,3 +56,4 @@
 
 - [ ] `RBC_CONST` and `RBC_PURE` where possible
 - [ ] build with TinyCC
+- [ ] `-fbounds-safety`

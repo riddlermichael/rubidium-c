@@ -78,7 +78,7 @@ rbc_dcp2_result rbc_dcp2_packet_from_bytes(u8 const* data, usize size) {
 	packet.req = (data[1] >> 7) & 0x01;
 	packet.len = len;
 	memcpy(rbc_dcp2_packet_get_data_mut(&packet), data + 4, len);
-	return (rbc_dcp2_result){packet, data + packet_size, RBC_DCP2_ERROR_OK};
+	return (rbc_dcp2_result) {packet, data + packet_size, RBC_DCP2_ERROR_OK};
 }
 
 rbc_array_u8 rbc_dcp2_packet_to_bytes(rbc_dcp2_packet* self) {
