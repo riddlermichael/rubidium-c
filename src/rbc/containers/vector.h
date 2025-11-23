@@ -6,6 +6,7 @@
 #include <rbc/containers/macros.h>
 #include <rbc/core/assert.h>
 #include <rbc/core/attributes.h>
+#include <rbc/core/helpers.h>
 #include <rbc/core/types.h>
 #include <rbc/utils/swap.h>
 
@@ -232,7 +233,7 @@
 		type const* lhs_last = lhs->data + lhs->size;                                  \
 		type const* rhs_last = rhs->data + rhs->size;                                  \
 		for (; (lhs_first != lhs_last) && (rhs_first != rhs_last);                     \
-		     ++lhs_first, ++rhs_first) {                                               \
+		    ++lhs_first, ++rhs_first) {                                                \
 			if (cmp(*lhs_first, *rhs_first) < 0) {                                     \
 				return true;                                                           \
 			}                                                                          \
@@ -296,7 +297,7 @@
 		type const* lhs_last = lhs->data + lhs->size;              \
 		type const* rhs_last = rhs->data + rhs->size;              \
 		for (; (lhs_first != lhs_last) && (rhs_first != rhs_last); \
-		     ++lhs_first, ++rhs_first) {                           \
+		    ++lhs_first, ++rhs_first) {                            \
 			if (*lhs_first < *rhs_first) {                         \
 				return true;                                       \
 			}                                                      \
