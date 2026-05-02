@@ -6,9 +6,14 @@
 
 	#include <semaphore.h> // NOLINT(*-duplicate-include)
 
+	#include <rbc/core/warnings.h>
+
 struct rbc_semaphore_impl {
 	sem_t impl;
 };
+
+RBC_WARNING_PUSH
+RBC_WARNING_DEPRECATED
 
 // NOLINTBEGIN(clang-diagnostic-deprecated-declarations)
 // ReSharper disable CppDeprecatedEntity
@@ -30,6 +35,7 @@ rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
 }
 
 // NOLINTEND(clang-diagnostic-deprecated-declarations)
+RBC_WARNING_POP
 
 rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(sem_wait(RBC_SYNC_IMPL));

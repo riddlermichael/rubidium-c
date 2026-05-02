@@ -26,6 +26,7 @@ Checks: >
   -readability-implicit-bool-conversion,
   -readability-magic-numbers,
   -readability-math-missing-parentheses,
+  -readability-use-concise-preprocessor-directives,
 
 FormatStyle: file
 CheckOptions:
