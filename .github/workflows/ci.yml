@@ -13,65 +13,48 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        build-type: [Release]
-        c-compiler: [gcc, clang, cl]
+        os: [ ubuntu-latest, windows-latest ]
+        c-compiler: [ gcc, clang, cl ]
         include:
+          - build-type: Release
           - os: windows-latest
-            c-compiler: cl
-            cpp-compiler: cl
-          - os: ubuntu-latest
             c-compiler: gcc
-            cpp-compiler: g++
-          - os: ubuntu-latest
+            generator: Ninja
+          - os: windows-latest
             c-compiler: clang
-            cpp-compiler: clang++
+            generator: Ninja
         exclude:
-          - os: windows-latest
-            c-compiler: gcc
-          - os: windows-latest
-            c-compiler: clang
           - os: ubuntu-latest
             c-compiler: cl
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: seanmiddleditch/gha-setup-ninja@v4
-      if: matrix.os != 'windows-latest'
+      - uses: actions/checkout@v5
 
-    - name: Set environment
-      id: env-win
-      if: matrix.os == 'windows-latest'
-      run: |
-        echo "nproc=%NUMBER_OF_PROCESSORS%" >> "$GITHUB_ENV"
+      - name: Install Ninja
+        uses: lukka/get-cmake@latest
 
-    - name: Set environment
-      id: env-linux
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        echo "nproc=$(nproc)" >> "$GITHUB_ENV"
-        echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
+      - name: Setup MinGW
+        if: matrix.os == 'windows-latest' && matrix.c-compiler == 'gcc'
+        run: |
+          echo "C:\ProgramData\Chocolatey\bin" >> $GITHUB_PATH
+          echo "C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
+        shell: bash
 
-    - name: Get build dir
-      id: vars
-      shell: bash
-      run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+      - name: Setup Clang
+        if: matrix.os == 'windows-latest' && matrix.c-compiler == 'clang'
+        run: echo "C:\Program Files\LLVM\bin" >> $GITHUB_PATH
+        shell: bash
 
-    - name: Configure
-      run: >
-        cmake
-        -B ${{ steps.vars.outputs.build-output-dir }}
-        -S ${{ github.workspace }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp-compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c-compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+      - name: Configure
+        shell: bash
+        run: >
+          cmake -B build
+          ${{ matrix.generator && format('-G "{0}"', matrix.generator) || '' }}
+          -DCMAKE_C_COMPILER=${{ matrix.c-compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
 
-    - name: Build
-      run: >
-        cmake --build ${{ steps.vars.outputs.build-output-dir }}
-        --config ${{ matrix.build-type }}
-        --parallel ${{ env.nproc }}
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build-type }} --parallel
 
-    - name: Test
-      working-directory: ${{ steps.vars.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build-type }}
+      - name: Test
+        run: ctest --test-dir build --build-config ${{ matrix.build-type }}
