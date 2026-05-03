@@ -2,10 +2,6 @@
 
 #include <rbc/core/compiler.h>
 
-#ifdef RBC_COMPILER_MSVC
-	#include <sal.h>
-#endif
-
 #ifdef __has_attribute
 	#define RBC_HAS_ATTRIBUTE(...) __has_attribute(__VA_ARGS__)
 #else
@@ -179,12 +175,4 @@ and only modifies the memory pointed to _directly_ by pointer parameters (first-
 	#define RBC_CLEANUP(dtor) __attribute__((cleanup(dtor)))
 #else
 	#define RBC_CLEANUP(dtor)
-#endif
-
-// SAL annotations
-
-#ifdef RBC_COMPILER_MSVC
-	#define RBC_IN _In_
-#else
-	#define RBC_IN
 #endif

@@ -26,53 +26,48 @@
  * WINRT    - WinRT
  */
 
-#if defined(__APPLE__) && (defined(__GNUC__) || defined(__xlC__) || defined(__xlc__))
+#if defined(__APPLE__)
 	#include <TargetConditionals.h>
 
-	#if defined(TARGET_OS_MAC) && TARGET_OS_MAC
-		#define RBC_OS_DARWIN
-		#ifdef __LP64__
-			#define RBC_OS_DARWIN64
-		#else
-			#define RBC_OS_DARWIN32
-		#endif
+	#define RBC_OS_DARWIN
+
+	#if defined(TARGET_OS_OSX) && TARGET_OS_OSX
+		#define RBC_OS_MACOS
+	#elif defined(TARGET_OS_IOS) && TARGET_OS_IOS
+		#define RBC_OS_IOS
+	#elif defined(TARGET_OS_WATCH) && TARGET_OS_WATCH
+		#define RBC_OS_WATCHOS
+	#elif defined(TARGET_OS_TV) && TARGET_OS_TV
+		#define RBC_OS_TVOS
+	#elif defined(TARGET_OS_MAC) && TARGET_OS_MAC
 		#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-			#define QT_PLATFORM_UIKIT
-			#if defined(TARGET_OS_WATCH) && TARGET_OS_WATCH
-				#define RBC_OS_WATCHOS
-			#elif defined(TARGET_OS_TV) && TARGET_OS_TV
-				#define RBC_OS_TVOS
-			#else
-				#define RBC_OS_IOS
-			#endif
+			#define RBC_OS_IOS
 		#else
 			#define RBC_OS_MACOS
 		#endif
 	#else
 		#error "Unknown Apple platform"
 	#endif
+
+	#ifdef __LP64__
+		#define RBC_OS_DARWIN64
+	#else
+		#define RBC_OS_DARWIN32
+	#endif
 #elif defined(__ANDROID__) || defined(ANDROID)
 	#define RBC_OS_ANDROID
 	#define RBC_OS_LINUX
 #elif defined(__CYGWIN__)
 	#define RBC_OS_CYGWIN
-#elif !defined(SAG_COM) && (!defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP) && (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))
+#elif defined(_WIN32) || defined(_WIN64) || defined(__NT__)
 	#define RBC_OS_WIN32
-	#define RBC_OS_WIN64
-#elif !defined(SAG_COM) && (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
-	#if defined(WINAPI_FAMILY)
-		#ifndef WINAPI_FAMILY_PC_APP
-			#define WINAPI_FAMILY_PC_APP WINAPI_FAMILY_APP
-		#endif
-		#if defined(WINAPI_FAMILY_PHONE_APP) && WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
-			#define RBC_OS_WINRT
-		#elif WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
-			#define RBC_OS_WINRT
-		#else
-			#define RBC_OS_WIN32
-		#endif
-	#else
-		#define RBC_OS_WIN32
+
+	#if defined(_WIN64) || defined(__WIN64__) || defined(WIN64)
+		#define RBC_OS_WIN64
+	#endif
+
+	#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
+		#define RBC_OS_WINRT
 	#endif
 #elif defined(__sun) || defined(sun)
 	#define RBC_OS_SOLARIS

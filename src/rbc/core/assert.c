@@ -40,8 +40,7 @@ void rbc_throw_assert(char const* msg, rbc_source_location loc) {
 }
 
 void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fmt, ...) {
-	(void) fprintf(stderr, "Assertion failed: ");
-	(void) fprintf(stderr, "%s", msg);
+	(void) fprintf(stderr, "Assertion failed: %s", msg);
 
 	if (fmt) {
 		(void) fprintf(stderr, " (");
@@ -56,7 +55,7 @@ void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fm
 	rbc_source_location_print_to(loc, stderr);
 	(void) fprintf(stderr, "\n");
 	(void) fflush(stderr);
-	rbc_assert_handler handler = rbc_get_assert_handler();
+	rbc_assert_handler const handler = rbc_get_assert_handler();
 	if (handler) {
 		handler(msg, loc);
 	}

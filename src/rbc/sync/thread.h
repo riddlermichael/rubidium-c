@@ -53,7 +53,7 @@ RBC_EXPORT rbc_error rbc_thread_join_with_code(rbc_thread self, int* exit_code);
 RBC_NORETURN
 #endif
 /// Equivalent to calling `rbc_thread_exit(0)`.
-inline static RBC_EXPORT void rbc_thread_quit(void) {
+static inline RBC_EXPORT void rbc_thread_quit(void) {
 	rbc_thread_exit(0);
 }
 

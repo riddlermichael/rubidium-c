@@ -3,7 +3,6 @@
 #include <rbc/core/attributes.h>
 #include <rbc/core/export.h>
 #include <rbc/core/extern.h>
-#include <rbc/core/keywords.h>
 #include <rbc/core/types.h>
 
 #include <rbc/rbc_version.h>

@@ -4,7 +4,6 @@
 
 #include <rbc/core/attributes.h>
 #include <rbc/core/endian.h>
-#include <rbc/core/keywords.h>
 #include <rbc/core/types.h>
 
 #if defined(RBC_COMPILER_GCC_LIKE)
@@ -19,6 +18,22 @@ static inline RBC_CONST RBC_NOTHROW u32 rbc_bswap_u32(u32 value) {
 
 static inline RBC_CONST RBC_NOTHROW u16 rbc_bswap_u16(u16 value) {
 	return __builtin_bswap16(value);
+}
+
+#elif defined(RBC_COMPILER_MSVC)
+
+	#include <stdlib.h>
+
+static inline RBC_NOTHROW u64 rbc_bswap_u64(u64 value) {
+	return _byteswap_uint64(value);
+}
+
+static inline RBC_NOTHROW u32 rbc_bswap_u32(u32 value) {
+	return _byteswap_ulong(value);
+}
+
+static inline RBC_NOTHROW u16 rbc_bswap_u16(u16 value) {
+	return _byteswap_ushort(value);
 }
 
 #else
@@ -54,7 +69,7 @@ static inline RBC_CONST RBC_NOTHROW u16 rbc_bswap_u16(u16 value) {
 
 #endif
 
-inline static RBC_CONST RBC_NOTHROW u8 rbc_bswap_u8(u8 value) {
+static inline RBC_CONST RBC_NOTHROW u8 rbc_bswap_u8(u8 value) {
 	return value;
 }
 
@@ -65,11 +80,11 @@ static inline RBC_CONST RBC_NOTHROW i64 rbc_bswap_i64(i64 value) {
 }
 
 static inline RBC_CONST RBC_NOTHROW i32 rbc_bswap_i32(i32 value) {
-	return (i32) rbc_bswap_u64((u32) value);
+	return (i32) rbc_bswap_u32((u32) value);
 }
 
 static inline RBC_CONST RBC_NOTHROW i16 rbc_bswap_i16(i16 value) {
-	return (i16) rbc_bswap_u64((u16) value);
+	return (i16) rbc_bswap_u16((u16) value);
 }
 
 static inline RBC_CONST RBC_NOTHROW i8 rbc_bswap_i8(i8 value) {

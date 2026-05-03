@@ -23,21 +23,31 @@ RBC_END_EXTERN_C
  * If it does, #RBC_ASSERT outputs diagnostic information to the log
  * and calls `exit()` (unlike `std::assert`, which calls `abort()`).
  */
-#define RBC_ASSERT(cond) (cond) ? (void) (0) : rbc_throw_assert(#cond, RBC_SOURCE_LOC_FN)
+#define RBC_ASSERT(cond)                                \
+	do {                                                \
+		if (RBC_UNLIKELY(!(cond))) {                    \
+			rbc_throw_assert(#cond, RBC_SOURCE_LOC_FN); \
+		}                                               \
+	} while (0)
 
 /// Extended assert with additional info.
 /// Usage: @code RBC_ASSERT_X(2 + 2 == 5, "catch %d", 22) @endcode
 // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-#define RBC_ASSERT_X(cond, ...) (cond) ? (void) (0) : rbc_throw_assert_x(#cond, RBC_SOURCE_LOC_FN, __VA_ARGS__)
+#define RBC_ASSERT_X(cond, ...)                                        \
+	do {                                                               \
+		if (RBC_UNLIKELY(!(cond))) {                                   \
+			rbc_throw_assert_x(#cond, RBC_SOURCE_LOC_FN, __VA_ARGS__); \
+		}                                                              \
+	} while (0)
 
 #ifdef NDEBUG
     /// Assert which enabled only in debug mode.
-	#define RBC_DEBUG_ASSERT_C(cond) ((void) 0)
+	#define RBC_DEBUG_ASSERT(cond) ((void) (cond))
     /// Extended assert which enabled only in debug mode.
-	#define RBC_DEBUG_ASSERT_X(cond, ...) ((void) 0)
+	#define RBC_DEBUG_ASSERT_X(cond, ...) ((void) (cond))
 #else
 /// Assert which enabled only in debug mode.
-	#define RBC_DEBUG_ASSERT_C RBC_ASSERT
+	#define RBC_DEBUG_ASSERT RBC_ASSERT
 /// Extended assert which enabled only in debug mode.
 	#define RBC_DEBUG_ASSERT_X RBC_ASSERT_X
 #endif

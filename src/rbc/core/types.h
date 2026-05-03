@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <rbc/core/keywords.h>
+
 // NOLINTBEGIN(readability-identifier-naming)
 
 typedef int8_t i8;
@@ -23,3 +25,6 @@ typedef float f32;
 typedef double f64;
 
 // NOLINTEND(readability-identifier-naming)
+
+RBC_STATIC_ASSERT(sizeof(f32) == 4);
+RBC_STATIC_ASSERT(sizeof(f64) == 8);
