@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
-        c-compiler: [ gcc, clang, cl ]
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        c-compiler: [ cl, clang, gcc ]
         include:
           - build-type: Release
           - os: windows-latest
@@ -24,6 +24,10 @@ jobs:
             c-compiler: clang
             generator: Ninja
         exclude:
+          - os: macos-latest
+            c-compiler: cl
+          - os: macos-latest
+            c-compiler: gcc
           - os: ubuntu-latest
             c-compiler: cl
 
