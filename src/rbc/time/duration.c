@@ -3,18 +3,19 @@
 #include <rbc/core/builtins.h>
 #include <rbc/core/limits.h>
 
-static rbc_duration make_duration(i64 secs, i64 ticks) {
+static RBC_CONST RBC_NOTHROW rbc_duration make_duration(i64 secs, i64 ticks) {
 	return (rbc_duration) {.secs = secs, .ticks = (u32) ticks};
 }
 
-static rbc_duration make_normalized_duration(i64 secs, i64 ticks) {
+static RBC_CONST RBC_NOTHROW rbc_duration make_normalized_duration(i64 secs, i64 ticks) {
 	return (ticks < 0)
 	    ? make_duration(secs - 1, ticks + RBC_TICKS_PER_SECOND)
 	    : make_duration(secs, ticks);
 }
 
-static rbc_duration from_i64(i64 value, i64 ratio) {
-	return make_normalized_duration(value / ratio, value % ratio * RBC_TICKS_PER_SECOND / ratio);
+static RBC_CONST RBC_NOTHROW rbc_duration from_i64(i64 value, i64 ratio) {
+	i64 const rem = value % ratio;
+	return make_normalized_duration(value / ratio, (rem * (i64) RBC_TICKS_PER_SECOND) / ratio);
 }
 
 rbc_duration rbc_duration_zero(void) {
@@ -205,22 +206,34 @@ rbc_duration rbc_duration_from_std_timespec(std_timespec ts) {
 }
 
 i64 rbc_duration_to_ns(rbc_duration self) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
+		return self.secs;
+	}
+
 	return self.secs * RBC_NANOSECONDS_PER_SECOND
 	    + self.ticks / RBC_TICKS_PER_NANOSECOND;
 }
 
 i64 rbc_duration_to_us(rbc_duration self) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
+		return self.secs;
+	}
+
 	return self.secs * RBC_MICROSECONDS_PER_SECOND
 	    + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000);
 }
 
 i64 rbc_duration_to_ms(rbc_duration self) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
+		return self.secs;
+	}
+
 	return self.secs * RBC_MILLISECONDS_PER_SECOND
 	    + self.ticks / (RBC_TICKS_PER_NANOSECOND * 1000 * 1000);
 }
 
 i64 rbc_duration_to_s(rbc_duration self) {
-	if (rbc_duration_is_inf(self)) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
 		return self.secs;
 	}
 
@@ -228,9 +241,17 @@ i64 rbc_duration_to_s(rbc_duration self) {
 }
 
 i64 rbc_duration_to_min(rbc_duration self) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
+		return self.secs;
+	}
+
 	return rbc_duration_to_s(self) / RBC_SECONDS_PER_MINUTE;
 }
 
 i64 rbc_duration_to_h(rbc_duration self) {
+	if (RBC_UNLIKELY(rbc_duration_is_inf(self))) {
+		return self.secs;
+	}
+
 	return rbc_duration_to_s(self) / RBC_SECONDS_PER_HOUR;
 }

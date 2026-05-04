@@ -164,11 +164,18 @@ and only modifies the memory pointed to _directly_ by pointer parameters (first-
 #endif
 
 #if defined(RBC_COMPILER_GCC_LIKE)
-	#define RBC_ALWAYS_INLINE __attribute__((always_inline))
+	#define RBC_ALWAYS_INLINE inline __attribute__((always_inline))
+	#if RBC_HAS_ATTRIBUTE(noipa)
+		#define RBC_NEVER_INLINE __attribute__((noinline, noipa))
+	#else
+		#define RBC_NEVER_INLINE __attribute__((noinline))
+	#endif
 #elif defined(RBC_COMPILER_MSVC)
 	#define RBC_ALWAYS_INLINE __forceinline
+	#define RBC_NEVER_INLINE __declspec(noinline)
 #else
 	#define RBC_ALWAYS_INLINE inline
+	#define RBC_NEVER_INLINE
 #endif
 
 #if RBC_HAS_ATTRIBUTE(cleanup)

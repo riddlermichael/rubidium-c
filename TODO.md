@@ -16,6 +16,8 @@
 - [ ] SAL annotations
 - [ ] meta-types
 - [ ] safe opCmp
+- [ ] stable values for `rbc_error`
+- [ ] `cold` attribute
 
 ### `fmt`
 
@@ -52,9 +54,11 @@
   - [ ] conversions to s/ns/...
   - [ ] to/from string
 - [ ] time to/from string
+- [ ] `rbc_timespec_getres` has resolution 100ns
 
 ### Unsorted
 
 - [ ] `RBC_CONST` and `RBC_PURE` where possible
+  - [ ] `rbc_duration`
 - [ ] build with TinyCC
 - [ ] `-fbounds-safety`
