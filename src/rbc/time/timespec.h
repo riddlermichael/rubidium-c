@@ -16,7 +16,6 @@ struct rbc_timespec {
 	time_t tv_sec;
 	long tv_nsec;
 };
-
 typedef struct rbc_timespec rbc_timespec;
 
 RBC_BEGIN_EXTERN_C
@@ -37,6 +36,6 @@ RBC_NOTHROW rbc_timespec rbc_timespec_get(void);
  * Return the resolution of time provided by `timespec_get`.
  * Multiple calls to `timespec_getres` during the same program execution have identical results.
  */
-RBC_NOTHROW rbc_timespec rbc_timespec_getres(void);
+RBC_NOTHROW rbc_timespec rbc_timespec_resolution(void);
 
 RBC_END_EXTERN_C
