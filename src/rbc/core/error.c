@@ -248,8 +248,6 @@ char const* rbc_error_to_string(rbc_error error) {
 	}
 }
 
-// NOLINTBEGIN(*-security.insecureAPI.*)
-
 bool rbc_error_to_string_s(char* buf, usize size, rbc_error error) { // NOLINT(*-easily-swappable-parameters)
 	if (!buf || !size) {
 		return false;
@@ -258,16 +256,22 @@ bool rbc_error_to_string_s(char* buf, usize size, rbc_error error) { // NOLINT(*
 	char const* desc = rbc_error_to_string(error);
 	usize const len = strlen(desc);
 	if (len < size) {
-		strncpy(buf, desc, len);
+		memcpy(buf, desc, len);
+		buf[len] = '\0';
 		return true;
 	}
 
-	if (size > 3) {
-		strncpy(buf, desc, size - 4);
-		strcat(buf, "...");
-		return true;
+	if (size <= 3) {
+		return false;
 	}
-	return false;
+
+	usize const copy_len = size - 4;
+	memcpy(buf, desc, copy_len);
+	buf += copy_len;
+	*buf++ = '.';
+	*buf++ = '.';
+	*buf++ = '.';
+	// ReSharper disable once CppDFAUnusedValue
+	*buf++ = '\0';
+	return true;
 }
-
-// NOLINTEND(*-security.insecureAPI.*)

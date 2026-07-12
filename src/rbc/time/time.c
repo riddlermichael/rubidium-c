@@ -6,7 +6,7 @@ rbc_time rbc_time_unix_epoch(void) {
 
 rbc_time rbc_time_now(void) {
 	rbc_timespec const ts = rbc_timespec_get();
-	return (rbc_time){rbc_duration_from_timespec(ts)};
+	return (rbc_time) {rbc_duration_from_timespec(ts)};
 }
 
 bool rbc_time_lt(rbc_time lhs, rbc_time rhs) {
@@ -38,11 +38,11 @@ rbc_duration rbc_time_sub(rbc_time lhs, rbc_time rhs) {
 }
 
 rbc_time rbc_time_add_duration(rbc_time self, rbc_duration d) {
-	return (rbc_time){rbc_duration_add(self.rep, d)};
+	return (rbc_time) {rbc_duration_add(self.rep, d)};
 }
 
 rbc_time rbc_time_sub_duration(rbc_time self, rbc_duration d) {
-	return (rbc_time){rbc_duration_sub(self.rep, d)};
+	return (rbc_time) {rbc_duration_sub(self.rep, d)};
 }
 
 rbc_timespec rbc_time_to_timespec(rbc_time t) {
@@ -50,7 +50,7 @@ rbc_timespec rbc_time_to_timespec(rbc_time t) {
 }
 
 rbc_time rbc_time_from_timespec(rbc_timespec ts) {
-	return (rbc_time){.rep = rbc_duration_from_timespec(ts)};
+	return (rbc_time) {rbc_duration_from_timespec(ts)};
 }
 
 rbc_time rbc_time_deadline_from_timeout(rbc_duration timeout) {

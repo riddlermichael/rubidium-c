@@ -28,22 +28,11 @@ rbc_timespec rbc_timespec_get(void) {
 	u64 const ticks = ticks_since_1601 - RBC_WIN_TICKS_FROM_1601_TO_UNIX_EPOCH;
 	u64 const secs = ticks / RBC_WIN_TICKS_PER_SECOND;
 	u64 const nsecs = (ticks - secs * RBC_WIN_TICKS_PER_SECOND) * RBC_NANOSECONDS_PER_WIN_TICK;
-	return (rbc_timespec) {secs, nsecs};
+	return (rbc_timespec) {.tv_sec = (time_t) secs, .tv_nsec = (long) nsecs}; // TODO overflow
 }
 
-rbc_timespec rbc_timespec_getres(void) {
-	LARGE_INTEGER freq;
-	#if _WIN32_WINNT >= 0x0600
-	QueryPerformanceFrequency(&freq);
-	#else
-	if (!QueryPerformanceFrequency(&freq)) {
-		freq.QuadPart = RBC_WIN_TICKS_PER_SECOND;
-	}
-	#endif
-
-	rbc_timespec ts = {0};
-	ts.tv_nsec = (long) ((RBC_NANOSECONDS_PER_SECOND + (freq.QuadPart / 2)) / freq.QuadPart);
-	return ts;
+rbc_timespec rbc_timespec_resolution(void) {
+	return (rbc_timespec) {.tv_sec = 0, .tv_nsec = RBC_NANOSECONDS_PER_WIN_TICK};
 }
 
 	#undef RBC_NANOSECONDS_PER_WIN_TICK
@@ -58,7 +47,7 @@ rbc_timespec rbc_timespec_get(void) {
 	return rbc_timespec_from_std_timespec(ts);
 }
 
-rbc_timespec rbc_timespec_getres(void) {
+rbc_timespec rbc_timespec_resolution(void) {
 	std_timespec ts;
 	(void) clock_getres(CLOCK_REALTIME, &ts);
 	return rbc_timespec_from_std_timespec(ts);

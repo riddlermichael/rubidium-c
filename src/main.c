@@ -8,5 +8,4 @@
 #include <rbc/utils/package.h>
 
 int main(void) {
-	return 0;
 }

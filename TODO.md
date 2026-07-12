@@ -40,25 +40,24 @@
 - [ ] static mutexes
 - [ ] do we need to get actual stack size?
 - [ ] windows
-  - [ ] `cond_var`
-  - [ ] `mutex`
-  - [ ] `spinlock`
-  - [ ] `tls` destructor
+    - [ ] `cond_var`
+    - [ ] `mutex`
+    - [ ] `spinlock`
+    - [ ] `tls` destructor
 
 ### `time`
 
 - [ ] `TIME_V2`: use `i128`
 - [ ] duration
-  - [ ] reduce size to 12 bytes
-  - [ ] division
-  - [ ] conversions to s/ns/...
-  - [ ] to/from string
+    - [ ] reduce size to 12 bytes
+    - [ ] division
+    - [ ] conversions to s/ns/...
+    - [ ] to/from string
 - [ ] time to/from string
-- [ ] `rbc_timespec_getres` has resolution 100ns
 
 ### Unsorted
 
 - [ ] `RBC_CONST` and `RBC_PURE` where possible
-  - [ ] `rbc_duration`
+    - [ ] `rbc_duration`
 - [ ] build with TinyCC
 - [ ] `-fbounds-safety`
