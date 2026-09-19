@@ -85,7 +85,7 @@ Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
-EnumTrailingComma: Leave # 21
+EnumTrailingComma: Insert # 21
 FixNamespaceComments: true
 ForEachMacros: [ ]
 IncludeBlocks: Preserve
