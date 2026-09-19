@@ -30,6 +30,7 @@ set(SOURCES)
 foreach(X ${MODULES})
     add_c_module(${X} ${RBC_ROOT_DIR})
 endforeach()
+add_subdirectory(interval)
 add_subdirectory(sync)
 source_group(TREE "${ROOT_DIR}" FILES ${HEADERS} ${SOURCES})
 

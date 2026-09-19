@@ -21,5 +21,5 @@ endif()
 # build app
 set(APP rbc-main)
 add_executable(${APP} main.c)
-target_link_libraries(${APP} PUBLIC RbC::RbC)
+target_link_libraries(${APP} PUBLIC RbC::RbC RbC::Interval)
 use_sanitizers(${APP})

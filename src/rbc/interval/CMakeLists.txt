@@ -1,0 +1,17 @@
+include(Sanitizers)
+
+file(GLOB HEADERS "*.h")
+file(GLOB SOURCES "*.c")
+
+set(LIB ${PRODUCT_NAME}-interval)
+add_library(${LIB} STATIC ${SOURCES} ${HEADERS})
+add_library(RbC::Interval ALIAS ${LIB})
+set_target_properties(${LIB} PROPERTIES INTERPROCEDURAL_OPTIMIZATION OFF)
+if(COMPILER_GCC OR COMPILER_CLANG)
+    target_compile_options(${LIB} PRIVATE -frounding-math)
+    target_link_options(${LIB} PRIVATE -frounding-math)
+elseif(COMPILER_MSVC)
+    target_compile_options(${LIB} PRIVATE /fp:strict)
+endif()
+target_link_libraries(${LIB} PUBLIC RbC::RbC)
+use_sanitizers(${LIB})
