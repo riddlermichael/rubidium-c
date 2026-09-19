@@ -7,7 +7,7 @@
 enum {
 	/// Maximal length of a result string (not including '\0') produced by rbc_to_chars
 	/// (i.e. length of `"18446744073709551615"` or `"-9223372036854775808"`).
-	RBC_TO_CHARS_RESULT_MAX_LEN = 20
+	RBC_TO_CHARS_RESULT_MAX_LEN = 20,
 };
 
 struct RbcFromCharsResult {

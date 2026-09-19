@@ -31,7 +31,7 @@ struct RbcThreadImpl {
 static _Thread_local RbcThreadImpl* this_thread_impl;
 
 static void* start_thread(void* arg) {
-	RbcThreadImpl* impl = (RbcThreadImpl*) arg;
+	RbcThreadImpl* impl = arg;
 	this_thread_impl = impl;
 
 	isize const ret = (impl->fn)(arg); // NOLINT(*-redundant-parentheses)

@@ -8,7 +8,7 @@ static RBC_CONST RBC_NOTHROW RbcDuration make_duration(i64 secs, i64 ticks) {
 }
 
 static RBC_CONST RBC_NOTHROW RbcDuration make_normalized_duration(i64 secs, i64 ticks) {
-	return (ticks < 0)
+	return ticks < 0
 	    ? make_duration(secs - 1, ticks + RBC_TICKS_PER_SECOND)
 	    : make_duration(secs, ticks);
 }
@@ -193,7 +193,7 @@ RbcTimespec rbc_duration_to_timespec(RbcDuration self) {
 
 RbcDuration rbc_duration_from_timespec(RbcTimespec ts) {
 	if (RBC_LIKELY(ts.tv_nsec < RBC_NANOSECONDS_PER_SECOND)) {
-		return (RbcDuration) {ts.tv_sec, ts.tv_nsec * RBC_TICKS_PER_NANOSECOND};
+		return (RbcDuration) {.secs = ts.tv_sec, .ticks = ts.tv_nsec * RBC_TICKS_PER_NANOSECOND};
 	}
 
 	RbcDuration const s = rbc_duration_s(ts.tv_sec);

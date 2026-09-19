@@ -20,7 +20,7 @@ typedef struct RbcTimespec RbcTimespec;
 
 RBC_BEGIN_EXTERN_C
 
-typedef struct timespec StdTimespec;
+typedef struct timespec StdTimespec; // NOLINT(*-identifier-naming)
 
 RBC_NOTHROW RBC_CONST StdTimespec rbc_timespec_to_std_timespec(RbcTimespec self);
 RBC_NOTHROW RBC_CONST RbcTimespec rbc_timespec_from_std_timespec(StdTimespec ts);
