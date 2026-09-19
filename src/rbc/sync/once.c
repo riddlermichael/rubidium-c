@@ -4,7 +4,7 @@
 
 #if RBC_USE(PTHREADS)
 
-rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) {
+RbcError rbc_call_once(rbc_once* self, rbc_once_fn fn) {
 	return pthread_once(&self->impl, fn);
 }
 
@@ -16,7 +16,7 @@ static BOOL WINAPI init_once_fn(INIT_ONCE* init_once, void* arg, void** context)
 	return TRUE;
 }
 
-rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) {
+RbcError rbc_call_once(rbc_once* self, rbc_once_fn fn) {
 	RBC_SYNC_CHECK_LAST_ERROR(InitOnceExecuteOnce((INIT_ONCE*) &self->impl, init_once_fn, (void*) fn, NULL));
 }
 

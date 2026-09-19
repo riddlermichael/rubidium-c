@@ -12,14 +12,14 @@ enum {
 
 struct rbc_from_chars_result {
 	char const* ptr;
-	rbc_error error;
+	RbcError error;
 };
 
 typedef struct rbc_from_chars_result rbc_from_chars_result;
 
 struct rbc_to_chars_result {
 	char* ptr;
-	rbc_error error;
+	RbcError error;
 };
 
 typedef struct rbc_to_chars_result rbc_to_chars_result;

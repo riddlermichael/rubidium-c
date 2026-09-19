@@ -34,6 +34,6 @@ RBC_BEGIN_EXTERN_C
 
 typedef void (*rbc_once_fn)(void);
 
-RBC_EXPORT rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_call_once(rbc_once* self, rbc_once_fn fn) RBC_NONNULL;
 
 RBC_END_EXTERN_C

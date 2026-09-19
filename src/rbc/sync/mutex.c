@@ -8,7 +8,7 @@ struct rbc_mutex_impl {
 	pthread_mutex_t impl;
 };
 
-rbc_error rbc_mutex_init(rbc_mutex* self) {
+RbcError rbc_mutex_init(rbc_mutex* self) {
 	#define RBC_SYNC_CHECK_WITH_CLEANUP(expr)     \
 		do {                                      \
 			int const _err = expr;                \
@@ -36,20 +36,20 @@ rbc_error rbc_mutex_init(rbc_mutex* self) {
 	#undef RBC_SYNC_CHECK_WITH_CLEANUP
 }
 
-rbc_error rbc_mutex_destroy(rbc_mutex* self) {
+RbcError rbc_mutex_destroy(rbc_mutex* self) {
 	RBC_SYNC_DESTROY(pthread_mutex_destroy(RBC_SYNC_IMPL_PTR));
 }
 
-rbc_error rbc_mutex_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_lock(RBC_SYNC_IMPL);
 }
 
-rbc_error rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	rbc_time const deadline = rbc_time_deadline_from_timeout(timeout);
 	return rbc_mutex_lock_until(self, deadline);
 }
 
-rbc_error rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	#ifndef RBC_OS_DARWIN
 	rbc_timespec const ts = rbc_time_to_timespec(deadline);
 	return pthread_mutex_timedlock(RBC_SYNC_IMPL, (struct timespec const*) &ts);
@@ -60,11 +60,11 @@ rbc_error rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_
 	#endif
 }
 
-rbc_error rbc_mutex_try_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_try_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_trylock(RBC_SYNC_IMPL);
 }
 
-rbc_error rbc_mutex_unlock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_unlock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_unlock(RBC_SYNC_IMPL);
 }
 
@@ -74,7 +74,7 @@ struct rbc_mutex_impl {
 	CRITICAL_SECTION impl;
 };
 
-rbc_error rbc_mutex_init(rbc_mutex* self) {
+RbcError rbc_mutex_init(rbc_mutex* self) {
 	RBC_SYNC_INIT(rbc_mutex);
 	/**
 	 * Windows Server 2003 and Windows XP:
@@ -94,7 +94,7 @@ rbc_error rbc_mutex_init(rbc_mutex* self) {
 	return RBC_ERROR_OK;
 }
 
-rbc_error rbc_mutex_destroy(rbc_mutex* self) {
+RbcError rbc_mutex_destroy(rbc_mutex* self) {
 	if (self->impl) {
 		DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
 		free(self->impl);
@@ -102,7 +102,7 @@ rbc_error rbc_mutex_destroy(rbc_mutex* self) {
 	return RBC_ERROR_OK;
 }
 
-rbc_error rbc_mutex_lock(rbc_mutex self) {
+RbcError rbc_mutex_lock(rbc_mutex self) {
 	/**
 	 * This function can raise EXCEPTION_POSSIBLE_DEADLOCK, also known as STATUS_POSSIBLE_DEADLOCK,
 	 * if a wait operation on the critical section times out.
@@ -118,25 +118,25 @@ rbc_error rbc_mutex_lock(rbc_mutex self) {
 	return RBC_ERROR_OK;
 }
 
-rbc_error rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) {
+RbcError rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(timeout);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-rbc_error rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) {
+RbcError rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(deadline);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-rbc_error rbc_mutex_try_lock(rbc_mutex self) {
+RbcError rbc_mutex_try_lock(rbc_mutex self) {
 	return TryEnterCriticalSection(RBC_SYNC_IMPL)
 	         ? RBC_ERROR_OK
 	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 }
 
-rbc_error rbc_mutex_unlock(rbc_mutex self) {
+RbcError rbc_mutex_unlock(rbc_mutex self) {
 	LeaveCriticalSection(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }

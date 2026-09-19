@@ -52,8 +52,7 @@
 			#define RBC_BYTE_ORDER __BYTE_ORDER__
 		#elif defined(__BIG_ENDIAN__) || defined(_big_endian__) || defined(_BIG_ENDIAN)
 			#define RBC_BYTE_ORDER RBC_BIG_ENDIAN
-		#elif defined(__LITTLE_ENDIAN__) || defined(_little_endian__) || defined(_LITTLE_ENDIAN) \
-		    || defined(WINAPI_FAMILY) || defined(_WIN32)
+		#elif defined(__LITTLE_ENDIAN__) || defined(_little_endian__) || defined(_LITTLE_ENDIAN) || defined(WINAPI_FAMILY) || defined(_WIN32)
 			#define RBC_BYTE_ORDER RBC_LITTLE_ENDIAN
 		#else
 			#error "Unable to determine byte order"
@@ -61,10 +60,10 @@
 	#endif
 #endif
 
-enum rbc_endian {
+enum RbcEndian {
 	RBC_ENDIAN_LITTLE = RBC_LITTLE_ENDIAN,
 	RBC_ENDIAN_BIG = RBC_BIG_ENDIAN,
-	RBC_ENDIAN_NATIVE = RBC_BYTE_ORDER
+	RBC_ENDIAN_NATIVE = RBC_BYTE_ORDER,
 };
 
 #define RBC_IS_LITTLE_ENDIAN (RBC_BYTE_ORDER == RBC_LITTLE_ENDIAN)

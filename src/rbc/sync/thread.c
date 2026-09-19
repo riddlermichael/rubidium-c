@@ -46,7 +46,7 @@ usize rbc_thread_current_id(void) {
 	return (usize) pthread_self();
 }
 
-rbc_error rbc_thread_sleep_for(rbc_duration timeout) {
+RbcError rbc_thread_sleep_for(rbc_duration timeout) {
 	rbc_timespec const ts = rbc_duration_to_timespec(timeout);
 	RBC_SYNC_CHECK_LAST_ERROR(nanosleep((struct timespec const*) &ts, NULL));
 }
@@ -55,7 +55,7 @@ void rbc_thread_yield(void) {
 	sched_yield();
 }
 
-rbc_error rbc_thread_detach(rbc_thread self) {
+RbcError rbc_thread_detach(rbc_thread self) {
 	return pthread_detach(RBC_SYNC_DEREF_IMPL);
 }
 
@@ -67,7 +67,7 @@ usize rbc_thread_id(rbc_thread self) {
 	return self.impl ? (usize) self.impl->impl : 0;
 }
 
-rbc_error rbc_thread_join_with_code(rbc_thread self, int* exit_code) {
+RbcError rbc_thread_join_with_code(rbc_thread self, int* exit_code) {
 	void* ret_code = NULL;
 	int const error = pthread_join(RBC_SYNC_DEREF_IMPL, &ret_code);
 	if (exit_code) {
@@ -76,7 +76,7 @@ rbc_error rbc_thread_join_with_code(rbc_thread self, int* exit_code) {
 	return error;
 }
 
-rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
+RbcError rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 	if (RBC_SYNC_DEREF_IMPL) {
 		return RBC_ERROR_OPERATION_IN_PROGRESS;
 	}
@@ -99,12 +99,12 @@ rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 	return pthread_create(RBC_SYNC_IMPL, &attr, start_thread, self.impl);
 }
 
-rbc_error rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, int* exit_code) {
+RbcError rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, int* exit_code) {
 	rbc_time const deadline = rbc_time_deadline_from_timeout(timeout);
 	return rbc_thread_wait_until_with_code(self, deadline, exit_code);
 }
 
-rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, int* exit_code) {
+RbcError rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, int* exit_code) {
 	#ifdef RBC_COMPILER_MINGW
 
 	RBC_UNUSED(self);
@@ -169,7 +169,7 @@ usize rbc_thread_current_id(void) {
 	return this_thread_impl ? this_thread_impl->id : 0;
 }
 
-rbc_error rbc_thread_sleep_for(rbc_duration timeout) {
+RbcError rbc_thread_sleep_for(rbc_duration timeout) {
 	if (rbc_duration_is_neg(timeout)) {
 		return RBC_ERROR_INVALID_ARGUMENT;
 	}
@@ -184,7 +184,7 @@ void rbc_thread_yield(void) {
 	Sleep(0);
 }
 
-rbc_error rbc_thread_detach(rbc_thread self) {
+RbcError rbc_thread_detach(rbc_thread self) {
 	RBC_SYNC_CHECK_LAST_ERROR(CloseHandle(RBC_SYNC_DEREF_IMPL));
 }
 
@@ -197,7 +197,7 @@ usize rbc_thread_id(rbc_thread self) {
 	return self.impl->id;
 }
 
-static rbc_error rbc_thread_wait(rbc_thread self, DWORD milliseconds, int* exit_code) {
+static RbcError rbc_thread_wait(rbc_thread self, DWORD milliseconds, int* exit_code) {
 	DWORD const code = WaitForSingleObject(RBC_SYNC_DEREF_IMPL, milliseconds);
 	if (code != WAIT_OBJECT_0) {
 		return rbc_error_from_last_error();
@@ -214,11 +214,11 @@ static rbc_error rbc_thread_wait(rbc_thread self, DWORD milliseconds, int* exit_
 	return RBC_ERROR_OK;
 }
 
-rbc_error rbc_thread_join_with_code(rbc_thread self, int* exit_code) {
+RbcError rbc_thread_join_with_code(rbc_thread self, int* exit_code) {
 	return rbc_thread_wait(self, INFINITE, exit_code);
 }
 
-rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
+RbcError rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 	if (!fn) {
 		return RBC_ERROR_INVALID_ARGUMENT;
 	}
@@ -239,7 +239,7 @@ rbc_error rbc_thread_start(rbc_thread self, rbc_thread_start_fn fn, void* arg) {
 	return RBC_SYNC_DEREF_IMPL ? RBC_ERROR_OK : errno; // _beginthreadex uses errno instead of GetLastError()
 }
 
-rbc_error rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, int* exit_code) {
+RbcError rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, int* exit_code) {
 	if (rbc_duration_is_neg(timeout)) {
 		return RBC_ERROR_INVALID_ARGUMENT;
 	}
@@ -248,7 +248,7 @@ rbc_error rbc_thread_wait_for_with_code(rbc_thread self, rbc_duration timeout, i
 	return rbc_thread_wait(self, ms, exit_code);
 }
 
-rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, int* exit_code) {
+RbcError rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, int* exit_code) {
 	rbc_duration const remaining = rbc_time_sub(deadline, rbc_time_now());
 	return rbc_thread_wait_for_with_code(self, remaining, exit_code);
 }
@@ -257,12 +257,12 @@ rbc_error rbc_thread_wait_until_with_code(rbc_thread self, rbc_time deadline, in
 
 // common part
 
-rbc_error rbc_thread_init(rbc_thread* self) {
+RbcError rbc_thread_init(rbc_thread* self) {
 	self->impl = calloc(1, sizeof(rbc_thread_impl));
 	return self->impl ? RBC_ERROR_OK : RBC_ERROR_NOT_ENOUGH_MEMORY;
 }
 
-rbc_error rbc_thread_destroy(rbc_thread* self) {
+RbcError rbc_thread_destroy(rbc_thread* self) {
 	RBC_SYNC_DESTROY(RBC_ERROR_OK);
 }
 
@@ -276,18 +276,18 @@ bool rbc_thread_equal(rbc_thread lhs, rbc_thread rhs) {
 	return rbc_thread_cmp(lhs, rhs) == 0;
 }
 
-rbc_error rbc_thread_join(rbc_thread self) {
+RbcError rbc_thread_join(rbc_thread self) {
 	return rbc_thread_join_with_code(self, NULL);
 }
 
 extern void rbc_thread_quit(void);
 
-rbc_error rbc_thread_sleep_until(rbc_time deadline) {
+RbcError rbc_thread_sleep_until(rbc_time deadline) {
 	rbc_duration const remaining = rbc_time_sub(deadline, rbc_time_now());
 	return rbc_thread_sleep_for(remaining);
 }
 
-rbc_error rbc_thread_set_stack_size(rbc_thread self, usize stack_size) {
+RbcError rbc_thread_set_stack_size(rbc_thread self, usize stack_size) {
 	if (!self.impl) {
 		return RBC_ERROR_INVALID_ARGUMENT;
 	}
@@ -304,10 +304,10 @@ usize rbc_thread_stack_size(rbc_thread self) {
 	return self.impl->stack_size;
 }
 
-rbc_error rbc_thread_wait_for(rbc_thread self, rbc_duration timeout) {
+RbcError rbc_thread_wait_for(rbc_thread self, rbc_duration timeout) {
 	return rbc_thread_wait_for_with_code(self, timeout, NULL);
 }
 
-rbc_error rbc_thread_wait_until(rbc_thread self, rbc_time deadline) {
+RbcError rbc_thread_wait_until(rbc_thread self, rbc_time deadline) {
 	return rbc_thread_wait_until_with_code(self, deadline, NULL);
 }

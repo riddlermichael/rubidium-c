@@ -46,7 +46,7 @@
 	#error Unsupported compiler
 #endif
 
-enum rbc_compiler_id {
+enum RbcCompilerId {
 	RBC_COMPILER_ID_CLANG = 0,
 	RBC_COMPILER_ID_GCC = 1,
 	RBC_COMPILER_ID_MINGW = 2,
@@ -60,5 +60,6 @@ enum rbc_compiler_id {
 #elif defined(RBC_COMPILER_MSVC)
 	RBC_COMPILER_ID = RBC_COMPILER_ID_MSVC
 #endif
+	    ,
 };
-typedef enum rbc_compiler_id rbc_compiler_id;
+typedef enum RbcCompilerId RbcCompilerId;

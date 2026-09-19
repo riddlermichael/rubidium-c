@@ -20,23 +20,23 @@ typedef struct rbc_condition rbc_condition;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT rbc_error rbc_condition_mutex_init(rbc_condition_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
-RBC_EXPORT rbc_error rbc_condition_mutex_destroy(rbc_condition_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_condition_mutex_init(rbc_condition_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_condition_mutex_destroy(rbc_condition_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
 
-RBC_EXPORT rbc_error rbc_condition_mutex_lock(rbc_condition_mutex self) RBC_ACQUIRE_CAPABILITY(self);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_for(rbc_condition_mutex self, rbc_duration timeout)
+RBC_EXPORT RbcError rbc_condition_mutex_lock(rbc_condition_mutex self) RBC_ACQUIRE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_condition_mutex_lock_for(rbc_condition_mutex self, rbc_duration timeout)
     RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_until(rbc_condition_mutex self, rbc_time deadline)
+RBC_EXPORT RbcError rbc_condition_mutex_lock_until(rbc_condition_mutex self, rbc_time deadline)
     RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_condition_mutex_try_lock(rbc_condition_mutex self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_condition_mutex_unlock(rbc_condition_mutex self) RBC_RELEASE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_condition_mutex_try_lock(rbc_condition_mutex self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
+RBC_EXPORT RbcError rbc_condition_mutex_unlock(rbc_condition_mutex self) RBC_RELEASE_CAPABILITY(self);
 
-RBC_EXPORT rbc_error rbc_condition_mutex_await(rbc_condition_mutex self, rbc_condition condition);
-RBC_EXPORT rbc_error rbc_condition_mutex_await_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
-RBC_EXPORT rbc_error rbc_condition_mutex_await_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_when(rbc_condition_mutex self, rbc_condition condition) RBC_ACQUIRE_CAPABILITY(self);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_when_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
-RBC_EXPORT rbc_error rbc_condition_mutex_lock_when_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
+RBC_EXPORT RbcError rbc_condition_mutex_await(rbc_condition_mutex self, rbc_condition condition);
+RBC_EXPORT RbcError rbc_condition_mutex_await_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
+RBC_EXPORT RbcError rbc_condition_mutex_await_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
+RBC_EXPORT RbcError rbc_condition_mutex_lock_when(rbc_condition_mutex self, rbc_condition condition) RBC_ACQUIRE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_condition_mutex_lock_when_for(rbc_condition_mutex self, rbc_condition condition, rbc_duration timeout);
+RBC_EXPORT RbcError rbc_condition_mutex_lock_when_until(rbc_condition_mutex self, rbc_condition condition, rbc_time deadline);
 
 /// Make rbc_condition that returns the result of `(*fn)(arg)`.
 /// Equivalent of `(rbc_condition){fn, arg}`.
