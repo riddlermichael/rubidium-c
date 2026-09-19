@@ -20,26 +20,26 @@
 	#include <rbc/sync/mutex.h>
 	#include <rbc/sync/once.h>
 
-static rbc_mutex g_assert_handler_mutex;
-static rbc_once g_init_mutex_once = RBC_ONCE_INIT;
+static RbcMutex g_assert_handler_mutex;
+static RbcOnce g_init_mutex_once = RBC_ONCE_INIT;
 
 static void rbc_init_assert_handler_mutex(void) {
 	rbc_mutex_init(&g_assert_handler_mutex);
 }
 
-static rbc_assert_handler g_assert_handler RBC_PT_GUARDED_BY(g_assert_handler_mutex);
+static RbcAssertHandler g_assert_handler RBC_PT_GUARDED_BY(g_assert_handler_mutex);
 
 #else
 
-static rbc_assert_handler _Atomic g_assert_handler;
+static RbcAssertHandler _Atomic g_assert_handler;
 
 #endif
 
-void rbc_throw_assert(char const* msg, rbc_source_location loc) {
+void rbc_throw_assert(char const* msg, RbcSourceLocation loc) {
 	rbc_throw_assert_x(msg, loc, NULL);
 }
 
-void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fmt, ...) {
+void rbc_throw_assert_x(char const* msg, RbcSourceLocation loc, char const* fmt, ...) {
 	(void) fprintf(stderr, "Assertion failed: %s", msg);
 
 	if (fmt) {
@@ -55,7 +55,7 @@ void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fm
 	rbc_source_location_print_to(loc, stderr);
 	(void) fprintf(stderr, "\n");
 	(void) fflush(stderr);
-	rbc_assert_handler const handler = rbc_get_assert_handler();
+	RbcAssertHandler const handler = rbc_get_assert_handler();
 	if (handler) {
 		handler(msg, loc);
 	}
@@ -64,18 +64,18 @@ void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fm
 
 #if RBC_ASSERT_HANDLER_NEED_MUTEX
 
-rbc_assert_handler rbc_get_assert_handler(void) {
+RbcAssertHandler rbc_get_assert_handler(void) {
 	rbc_call_once(&g_init_mutex_once, rbc_init_assert_handler_mutex);
 	rbc_mutex_lock(g_assert_handler_mutex);
-	rbc_assert_handler handler = g_assert_handler;
+	RbcAssertHandler handler = g_assert_handler;
 	rbc_mutex_unlock(g_assert_handler_mutex);
 	return handler;
 }
 
-rbc_assert_handler rbc_set_assert_handler(rbc_assert_handler handler) {
+RbcAssertHandler rbc_set_assert_handler(RbcAssertHandler handler) {
 	rbc_call_once(&g_init_mutex_once, rbc_init_assert_handler_mutex);
 	rbc_mutex_lock(g_assert_handler_mutex);
-	rbc_assert_handler prev_handler = g_assert_handler;
+	RbcAssertHandler prev_handler = g_assert_handler;
 	g_assert_handler = handler;
 	rbc_mutex_unlock(g_assert_handler_mutex);
 	return prev_handler;
@@ -83,11 +83,11 @@ rbc_assert_handler rbc_set_assert_handler(rbc_assert_handler handler) {
 
 #else
 
-rbc_assert_handler rbc_get_assert_handler(void) {
+RbcAssertHandler rbc_get_assert_handler(void) {
 	return atomic_load_explicit(&g_assert_handler, memory_order_acquire);
 }
 
-rbc_assert_handler rbc_set_assert_handler(rbc_assert_handler handler) {
+RbcAssertHandler rbc_set_assert_handler(RbcAssertHandler handler) {
 	return atomic_exchange_explicit(&g_assert_handler, handler, memory_order_acq_rel);
 }
 

@@ -1,26 +1,18 @@
 Checks: >
   bugprone-*,
-  cert-*,
   clang-analyzer-*,
-  clazy-*,
   concurrency-*,
-  cppcoreguidelines-*,
-  google-*,
-  hicpp-*,
+  google-runtime-float,
+  google-runtime-int,
   llvm-namespace-comment,
   misc-*,
   performance-*,
   portability-*,
   readability-*,
-  -cert-err58-cpp,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
-  -clazy-function-args-by-ref,
-  -cppcoreguidelines-avoid-do-while,
-  -cppcoreguidelines-avoid-non-const-global-variables,
-  -cppcoreguidelines-avoid-magic-numbers,
-  -hicpp-signed-bitwise,
   -misc-include-cleaner,
   -misc-use-anonymous-namespace,
+  -portability-avoid-pragma-once,
   -readability-avoid-nested-conditional-operator,
   -readability-identifier-length,
   -readability-implicit-bool-conversion,
@@ -30,22 +22,23 @@ Checks: >
 
 FormatStyle: file
 CheckOptions:
-  - { key: readability-identifier-naming.EnumCase, value: lower_case }
-  - { key: readability-identifier-naming.EnumPrefix, value: rbc_ }
+  - { key: readability-identifier-naming.ConstantCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.ConstantPrefix, value: RBC_ }
+  - { key: readability-identifier-naming.EnumCase, value: CamelCase }
   - { key: readability-identifier-naming.EnumConstantCase, value: UPPER_CASE }
   - { key: readability-identifier-naming.EnumConstantPrefix, value: RBC_ }
-  - { key: readability-identifier-naming.FunctionCase, value: lower_case }
-  - { key: readability-identifier-naming.GlobalConstantCase, value: lower_case }
-  - { key: readability-identifier-naming.GlobalConstantPrefix, value: k_ }
+  - { key: readability-identifier-naming.EnumPrefix, value: Rbc }
+  - { key: readability-identifier-naming.GlobalConstantCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.GlobalConstantPrefix, value: RBC_ }
+  - { key: readability-identifier-naming.LocalConstantCase, value: lower_case }
   - { key: readability-identifier-naming.MacroDefinitionCase, value: UPPER_CASE }
   - { key: readability-identifier-naming.MacroDefinitionPrefix, value: RBC_ }
-  - { key: readability-identifier-naming.MemberCase, value: lower_case }
-  - { key: readability-identifier-naming.ParameterCase, value: lower_case }
-  - { key: readability-identifier-naming.StaticConstantCase, value: lower_case }
-  - { key: readability-identifier-naming.StaticConstantPrefix, value: sc_ }
-  - { key: readability-identifier-naming.StructCase, value: lower_case }
-  - { key: readability-identifier-naming.StructPrefix, value: rbc_ }
-  - { key: readability-identifier-naming.TypedefCase, value: lower_case }
-  - { key: readability-identifier-naming.TypedefPrefix, value: rbc_ }
-  - { key: readability-identifier-naming.UnionCase, value: lower_case }
+  - { key: readability-identifier-naming.StaticConstantCase, value: UPPER_CASE }
+  - { key: readability-identifier-naming.StaticConstantPrefix, value: RBC_ }
+  - { key: readability-identifier-naming.StructCase, value: CamelCase }
+  - { key: readability-identifier-naming.StructPrefix, value: Rbc }
+  - { key: readability-identifier-naming.TypedefCase, value: CamelCase }
+  - { key: readability-identifier-naming.TypedefPrefix, value: Rbc }
+  - { key: readability-identifier-naming.UnionCase, value: CamelCase }
   - { key: readability-identifier-naming.VariableCase, value: lower_case }
+  - { key: bugprone-signed-bitwise.IgnorePositiveIntegerLiterals, value: 1 }

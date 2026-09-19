@@ -8,7 +8,7 @@
 
 	#include <rbc/core/warnings.h>
 
-struct rbc_semaphore_impl {
+struct RbcSemaphoreImpl {
 	sem_t impl;
 };
 
@@ -18,12 +18,12 @@ RBC_WARNING_DEPRECATED
 // NOLINTBEGIN(clang-diagnostic-deprecated-declarations)
 // ReSharper disable CppDeprecatedEntity
 
-rbc_error rbc_semaphore_init(rbc_semaphore* self, unsigned count) {
-	RBC_SYNC_INIT(rbc_semaphore);
+RbcError rbc_semaphore_init(RbcSemaphore* self, unsigned count) {
+	RBC_SYNC_INIT(RbcSemaphore);
 	RBC_SYNC_CHECK_LAST_ERROR(sem_init(RBC_SYNC_IMPL_PTR, false, count));
 }
 
-rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
+RbcError rbc_semaphore_destroy(RbcSemaphore* self) {
 	if (!self->impl) {
 		return RBC_ERROR_OK;
 	}
@@ -37,35 +37,35 @@ rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
 // NOLINTEND(clang-diagnostic-deprecated-declarations)
 RBC_WARNING_POP
 
-rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
+RbcError rbc_semaphore_acquire(RbcSemaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(sem_wait(RBC_SYNC_IMPL));
 }
 
-rbc_error rbc_semaphore_try_acquire(rbc_semaphore self) {
+RbcError rbc_semaphore_try_acquire(RbcSemaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(sem_trywait(RBC_SYNC_IMPL));
 }
 
-rbc_error rbc_semaphore_release(rbc_semaphore self) {
+RbcError rbc_semaphore_release(RbcSemaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(sem_post(RBC_SYNC_IMPL));
 }
 
 #elif RBC_USE(WIN32_THREADS)
 
-struct rbc_semaphore_impl {
+struct RbcSemaphoreImpl {
 	HANDLE impl;
 };
 
-rbc_error rbc_semaphore_init(rbc_semaphore* self, unsigned count) {
-	RBC_SYNC_INIT(rbc_semaphore);
+RbcError rbc_semaphore_init(RbcSemaphore* self, unsigned count) {
+	RBC_SYNC_INIT(RbcSemaphore);
 	RBC_SYNC_DEREF_IMPL_PTR = CreateSemaphoreA(NULL, count, count, NULL);
 	return RBC_SYNC_DEREF_IMPL_PTR ? RBC_ERROR_OK : rbc_error_from_last_error();
 }
 
-rbc_error rbc_semaphore_destroy(rbc_semaphore* self) {
+RbcError rbc_semaphore_destroy(RbcSemaphore* self) {
 	RBC_SYNC_DESTROY(CloseHandle(RBC_SYNC_DEREF_IMPL_PTR));
 }
 
-rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
+RbcError rbc_semaphore_acquire(RbcSemaphore self) {
 	DWORD const rc = WaitForSingleObject(RBC_SYNC_DEREF_IMPL, INFINITE);
 	switch (rc) {
 		case WAIT_FAILED  : return rbc_error_from_last_error();
@@ -74,7 +74,7 @@ rbc_error rbc_semaphore_acquire(rbc_semaphore self) {
 	}
 }
 
-rbc_error rbc_semaphore_try_acquire(rbc_semaphore self) {
+RbcError rbc_semaphore_try_acquire(RbcSemaphore self) {
 	DWORD const rc = WaitForSingleObject(RBC_SYNC_DEREF_IMPL, 0);
 	switch (rc) {
 		case WAIT_FAILED  : return rbc_error_from_last_error();
@@ -84,7 +84,7 @@ rbc_error rbc_semaphore_try_acquire(rbc_semaphore self) {
 	}
 }
 
-rbc_error rbc_semaphore_release(rbc_semaphore self) {
+RbcError rbc_semaphore_release(RbcSemaphore self) {
 	RBC_SYNC_CHECK_LAST_ERROR(ReleaseSemaphore(RBC_SYNC_DEREF_IMPL, 1, NULL));
 }
 

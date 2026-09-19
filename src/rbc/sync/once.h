@@ -6,34 +6,36 @@
 
 	#include <pthread.h>
 
-struct rbc_once {
+struct RbcOnce {
 	pthread_once_t impl;
 };
 
 	#define RBC_ONCE_INIT     \
-		(rbc_once) {          \
+		(RbcOnce) {           \
 			PTHREAD_ONCE_INIT \
 		}
 
 #elif RBC_USE(WIN32_THREADS)
 
-struct rbc_once {
+struct RbcOnce {
 	void* impl;
 };
 
 	#define RBC_ONCE_INIT \
 		{                 \
-			{ NULL }      \
+			{             \
+				NULL      \
+			}             \
 		}
 
 #endif
 
-typedef struct rbc_once rbc_once;
+typedef struct RbcOnce RbcOnce;
 
 RBC_BEGIN_EXTERN_C
 
-typedef void (*rbc_once_fn)(void);
+typedef void (*RbcOnceFn)(void);
 
-RBC_EXPORT rbc_error rbc_call_once(rbc_once* self, rbc_once_fn fn) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_call_once(RbcOnce* self, RbcOnceFn fn) RBC_NONNULL;
 
 RBC_END_EXTERN_C

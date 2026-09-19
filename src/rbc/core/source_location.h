@@ -10,7 +10,7 @@
 #include <rbc/core/extern.h>
 #include <rbc/core/features.h>
 
-struct rbc_source_location {
+struct RbcSourceLocation {
 	char const* file;
 	char const* func; // unnatural order here due to alignment
 	unsigned line;
@@ -19,7 +19,7 @@ struct rbc_source_location {
 #endif
 };
 
-typedef struct rbc_source_location rbc_source_location;
+typedef struct RbcSourceLocation RbcSourceLocation;
 
 #ifdef __cplusplus
 
@@ -41,7 +41,7 @@ inline std::ostream& operator<<(std::ostream& os, rbc_source_location loc) {
 #else
 	#if RBC_HAS(BUILTIN_COLUMN)
 		#define RBC_SOURCE_LOC                \
-			(rbc_source_location) {           \
+			(RbcSourceLocation) {             \
 				.file = RBC_BUILTIN_FILE,     \
 				.func = RBC_BUILTIN_FUNCTION, \
 				.line = RBC_BUILTIN_LINE,     \
@@ -50,7 +50,7 @@ inline std::ostream& operator<<(std::ostream& os, rbc_source_location loc) {
 
 	// Macros used in RBC_CURRENT_FUNCTION are defined only in functions and caused compilation error on MSVC if used outside
 		#define RBC_SOURCE_LOC_FN             \
-			(rbc_source_location) {           \
+			(RbcSourceLocation) {             \
 				.file = RBC_BUILTIN_FILE,     \
 				.func = RBC_CURRENT_FUNCTION, \
 				.line = RBC_BUILTIN_LINE,     \
@@ -58,14 +58,14 @@ inline std::ostream& operator<<(std::ostream& os, rbc_source_location loc) {
 			}
 	#else
 		#define RBC_SOURCE_LOC                \
-			(rbc_source_location) {           \
+			(RbcSourceLocation) {             \
 				.file = RBC_BUILTIN_FILE,     \
 				.func = RBC_BUILTIN_FUNCTION, \
 				.line = RBC_BUILTIN_LINE      \
 			}
 
 		#define RBC_SOURCE_LOC_FN             \
-			(rbc_source_location) {           \
+			(RbcSourceLocation) {             \
 				.file = RBC_BUILTIN_FILE,     \
 				.func = RBC_CURRENT_FUNCTION, \
 				.line = RBC_BUILTIN_LINE      \
@@ -75,9 +75,9 @@ inline std::ostream& operator<<(std::ostream& os, rbc_source_location loc) {
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT void rbc_source_location_print(rbc_source_location loc);
-RBC_EXPORT void rbc_source_location_print_to(rbc_source_location loc, FILE* f);
-RBC_EXPORT RBC_NOTHROW rbc_source_location rbc_source_location_current(
+RBC_EXPORT void rbc_source_location_print(RbcSourceLocation loc);
+RBC_EXPORT void rbc_source_location_print_to(RbcSourceLocation loc, FILE* f);
+RBC_EXPORT RBC_NOTHROW RbcSourceLocation rbc_source_location_current(
     char const* file,
     unsigned line,
     char const* func,

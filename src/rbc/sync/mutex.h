@@ -4,24 +4,24 @@
 #include <rbc/sync/lock_guard.h>
 #include <rbc/time/time.h>
 
-typedef struct rbc_mutex_impl rbc_mutex_impl;
+typedef struct RbcMutexImpl RbcMutexImpl;
 
-struct RBC_CAPABILITY("rbc_mutex") rbc_mutex {
-	rbc_mutex_impl* impl;
+struct RBC_CAPABILITY("RbcMutex") RbcMutex {
+	RbcMutexImpl* impl;
 };
-typedef struct rbc_mutex rbc_mutex;
+typedef struct RbcMutex RbcMutex;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT rbc_error rbc_mutex_init(rbc_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
-RBC_EXPORT rbc_error rbc_mutex_destroy(rbc_mutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_mutex_init(RbcMutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_mutex_destroy(RbcMutex* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
 
-RBC_EXPORT rbc_error rbc_mutex_lock(rbc_mutex self) RBC_ACQUIRE_CAPABILITY(self);
-RBC_EXPORT rbc_error rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_mutex_try_lock(rbc_mutex self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT rbc_error rbc_mutex_unlock(rbc_mutex self) RBC_RELEASE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_mutex_lock(RbcMutex self) RBC_ACQUIRE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_mutex_lock_for(RbcMutex self, RbcDuration timeout) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
+RBC_EXPORT RbcError rbc_mutex_lock_until(RbcMutex self, RbcTime deadline) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
+RBC_EXPORT RbcError rbc_mutex_try_lock(RbcMutex self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
+RBC_EXPORT RbcError rbc_mutex_unlock(RbcMutex self) RBC_RELEASE_CAPABILITY(self);
 
 RBC_END_EXTERN_C
 
-RBC_LOCK_GUARD_DEF(rbc_mutex_locker, rbc_mutex, RBC_EXPORT)
+// RBC_LOCK_GUARD_DEF(RbcMutexLocker, RbcMutex, RBC_EXPORT)

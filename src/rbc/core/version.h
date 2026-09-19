@@ -27,32 +27,32 @@
 #endif
 
 ///
-struct rbc_version {
+struct RbcVersion {
 	unsigned major;
 	unsigned minor;
 	unsigned patch;
 };
-typedef struct rbc_version rbc_version;
+typedef struct RbcVersion RbcVersion;
 
 ///
-enum rbc_version_component {
+enum RbcVersionComponent {
 	RBC_VERSION_COMPONENT_MAJOR,
 	RBC_VERSION_COMPONENT_MINOR,
 	RBC_VERSION_COMPONENT_PATCH,
 };
-typedef enum rbc_version_component rbc_version_component;
+typedef enum RbcVersionComponent RbcVersionComponent;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RBC_CONST RBC_NOTHROW rbc_version rbc_version_unpack(u32 value);
-RBC_EXPORT RBC_CONST RBC_NOTHROW u32 rbc_version_pack(rbc_version version);
-RBC_EXPORT RBC_CONST RBC_NOTHROW rbc_version rbc_version_bump(rbc_version version, rbc_version_component component);
+RBC_EXPORT RBC_CONST RBC_NOTHROW RbcVersion rbc_version_unpack(u32 value);
+RBC_EXPORT RBC_CONST RBC_NOTHROW u32 rbc_version_pack(RbcVersion version);
+RBC_EXPORT RBC_CONST RBC_NOTHROW RbcVersion rbc_version_bump(RbcVersion version, RbcVersionComponent component);
 
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_eq(rbc_version lhs, rbc_version rhs);
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_ne(rbc_version lhs, rbc_version rhs);
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_lt(rbc_version lhs, rbc_version rhs);
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_le(rbc_version lhs, rbc_version rhs);
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_gt(rbc_version lhs, rbc_version rhs);
-RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_ge(rbc_version lhs, rbc_version rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_eq(RbcVersion lhs, RbcVersion rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_ne(RbcVersion lhs, RbcVersion rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_lt(RbcVersion lhs, RbcVersion rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_le(RbcVersion lhs, RbcVersion rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_gt(RbcVersion lhs, RbcVersion rhs);
+RBC_EXPORT RBC_CONST RBC_NOTHROW bool rbc_version_ge(RbcVersion lhs, RbcVersion rhs);
 
 RBC_END_EXTERN_C

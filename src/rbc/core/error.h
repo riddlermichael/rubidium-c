@@ -8,7 +8,7 @@
 #include <rbc/core/types.h>
 
 /// @see https://learn.microsoft.com/en-us/cpp/c-runtime-library/errno-constants?view=msvc-170
-enum rbc_error {
+enum RbcError {
 	RBC_ERROR_OK = 0,
 	// our error codes; all must be negative
 	RBC_ERROR_UNKNOWN = -1,
@@ -90,25 +90,25 @@ enum rbc_error {
 	RBC_ERROR_WRONG_PROTOCOL_TYPE = EPROTOTYPE,
 };
 
-typedef enum rbc_error rbc_error;
+typedef enum RbcError RbcError;
 
 /// System error code.
-typedef unsigned rbc_error_code;
+typedef unsigned RbcErrorCode;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT rbc_error_code rbc_get_last_error(void);
+RBC_EXPORT RbcErrorCode rbc_get_last_error(void);
 
-RBC_EXPORT rbc_error rbc_error_from_error_code(rbc_error_code code);
+RBC_EXPORT RbcError rbc_error_from_error_code(RbcErrorCode code);
 
-RBC_EXPORT rbc_error rbc_error_from_last_error(void);
+RBC_EXPORT RbcError rbc_error_from_last_error(void);
 
 /**
  * Returns a pointer to the textual description of the error code @p error.
  * The contents of the string are *locale-independent*.
  * @return pointer to a null-terminated byte string corresponding to the @p error
  */
-RBC_EXPORT RBC_CONST char const* rbc_error_to_string(rbc_error error);
+RBC_EXPORT RBC_CONST char const* rbc_error_to_string(RbcError error);
 
 /**
  * Same as rbc_error_to_string, except that the message is copied into user-provided storage @p buf.
@@ -120,6 +120,6 @@ RBC_EXPORT RBC_CONST char const* rbc_error_to_string(rbc_error error);
  * @param error error code
  * @return `true` if the entire message was successfully stored in @p buf, `false` otherwise.
  */
-RBC_EXPORT bool rbc_error_to_string_s(char* buf, usize size, rbc_error error);
+RBC_EXPORT bool rbc_error_to_string_s(char* buf, usize size, RbcError error);
 
 RBC_END_EXTERN_C

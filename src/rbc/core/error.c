@@ -14,7 +14,7 @@
 // There is no direct relationship between `GetLastError()` and `errno`,
 // so some of these choices are arbitrary (and adapted from cygwin header); see
 // https://cygwin.com/git/gitweb.cgi?p=newlib-cygwin.git;a=blob;f=winsup/cygwin/errno.cc
-static rbc_error rbc_error_from_get_last_error(DWORD code) {
+static RbcError rbc_error_from_get_last_error(DWORD code) {
 	switch (code) {
 		case ERROR_SUCCESS                   : return RBC_ERROR_OK;
 
@@ -132,7 +132,7 @@ static rbc_error rbc_error_from_get_last_error(DWORD code) {
 
 #endif
 
-rbc_error_code rbc_get_last_error(void) {
+RbcErrorCode rbc_get_last_error(void) {
 #ifdef RBC_OS_WIN
 	return GetLastError();
 #else
@@ -140,7 +140,7 @@ rbc_error_code rbc_get_last_error(void) {
 #endif
 }
 
-rbc_error rbc_error_from_error_code(rbc_error_code code) {
+RbcError rbc_error_from_error_code(RbcErrorCode code) {
 #ifdef RBC_OS_WIN
 	return rbc_error_from_get_last_error(code);
 #else
@@ -148,11 +148,11 @@ rbc_error rbc_error_from_error_code(rbc_error_code code) {
 #endif
 }
 
-rbc_error rbc_error_from_last_error(void) {
+RbcError rbc_error_from_last_error(void) {
 	return rbc_error_from_error_code(rbc_get_last_error());
 }
 
-char const* rbc_error_to_string(rbc_error error) {
+char const* rbc_error_to_string(RbcError error) {
 	// EOPNOTSUPP and ENOTSUP may be identical
 	if (error == RBC_ERROR_NOT_SUPPORTED) {
 		return "Operation not supported";
@@ -248,7 +248,7 @@ char const* rbc_error_to_string(rbc_error error) {
 	}
 }
 
-bool rbc_error_to_string_s(char* buf, usize size, rbc_error error) { // NOLINT(*-easily-swappable-parameters)
+bool rbc_error_to_string_s(char* buf, usize size, RbcError error) { // NOLINT(*-easily-swappable-parameters)
 	if (!buf || !size) {
 		return false;
 	}

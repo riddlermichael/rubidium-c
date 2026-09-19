@@ -5,15 +5,15 @@
 RBC_BEGIN_EXTERN_C
 
 // Should have extern "C" linkage
-typedef void (*rbc_assert_handler)(char const* msg, rbc_source_location loc);
+typedef void (*RbcAssertHandler)(char const* msg, RbcSourceLocation loc);
 
 /// **Do not use in production code, use RBC_ASSERT macro instead.**
-RBC_NORETURN RBC_EXPORT void rbc_throw_assert(char const* msg, rbc_source_location loc);
+RBC_NORETURN RBC_EXPORT void rbc_throw_assert(char const* msg, RbcSourceLocation loc);
 /// **Do not use in production code, use RBC_ASSERT_X macro instead.**
-RBC_NORETURN RBC_EXPORT void rbc_throw_assert_x(char const* msg, rbc_source_location loc, char const* fmt, ...);
+RBC_NORETURN RBC_EXPORT void rbc_throw_assert_x(char const* msg, RbcSourceLocation loc, char const* fmt, ...);
 
-RBC_EXPORT RBC_NOTHROW rbc_assert_handler rbc_get_assert_handler(void);
-RBC_EXPORT RBC_NOTHROW rbc_assert_handler rbc_set_assert_handler(rbc_assert_handler handler);
+RBC_EXPORT RBC_NOTHROW RbcAssertHandler rbc_get_assert_handler(void);
+RBC_EXPORT RBC_NOTHROW RbcAssertHandler rbc_set_assert_handler(RbcAssertHandler handler);
 
 RBC_END_EXTERN_C
 
