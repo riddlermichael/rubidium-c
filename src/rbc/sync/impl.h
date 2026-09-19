@@ -24,7 +24,7 @@
 
 #define RBC_SYNC_INIT(T)                        \
 	do {                                        \
-		self->impl = malloc(sizeof(T##_impl));  \
+		self->impl = malloc(sizeof(T##Impl));   \
 		if (!self->impl) {                      \
 			return RBC_ERROR_NOT_ENOUGH_MEMORY; \
 		}                                       \
@@ -39,12 +39,12 @@
 	} while (0)
 
 #ifdef RBC_OS_WIN
-	#define RBC_SYNC_CHECK_LAST_ERROR(expr)         \
-		do {                                        \
-			unsigned long const _err = expr;        \
-			return _err                             \
-			         ? RBC_ERROR_OK                 \
-			         : rbc_error_from_last_error(); \
+	#define RBC_SYNC_CHECK_LAST_ERROR(expr)    \
+		do {                                   \
+			unsigned long const _err = expr;   \
+			return _err                        \
+			    ? RBC_ERROR_OK                 \
+			    : rbc_error_from_last_error(); \
 		} while (0)
 #else
 	#define RBC_SYNC_CHECK_LAST_ERROR(expr) \

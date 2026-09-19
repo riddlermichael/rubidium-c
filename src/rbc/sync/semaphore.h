@@ -2,20 +2,20 @@
 
 #include <rbc/sync/common.h>
 
-typedef struct rbc_semaphore_impl rbc_semaphore_impl;
+typedef struct RbcSemaphoreImpl RbcSemaphoreImpl;
 
-struct rbc_semaphore {
-	rbc_semaphore_impl* impl;
+struct RbcSemaphore {
+	RbcSemaphoreImpl* impl;
 };
-typedef struct rbc_semaphore rbc_semaphore;
+typedef struct RbcSemaphore RbcSemaphore;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RbcError rbc_semaphore_init(rbc_semaphore* self, unsigned count) RBC_NONNULL;
-RBC_EXPORT RbcError rbc_semaphore_destroy(rbc_semaphore* self) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_semaphore_init(RbcSemaphore* self, unsigned count) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_semaphore_destroy(RbcSemaphore* self) RBC_NONNULL;
 
-RBC_EXPORT RbcError rbc_semaphore_acquire(rbc_semaphore self);
-RBC_EXPORT RbcError rbc_semaphore_try_acquire(rbc_semaphore self);
-RBC_EXPORT RbcError rbc_semaphore_release(rbc_semaphore self);
+RBC_EXPORT RbcError rbc_semaphore_acquire(RbcSemaphore self);
+RBC_EXPORT RbcError rbc_semaphore_try_acquire(RbcSemaphore self);
+RBC_EXPORT RbcError rbc_semaphore_release(RbcSemaphore self);
 
 RBC_END_EXTERN_C

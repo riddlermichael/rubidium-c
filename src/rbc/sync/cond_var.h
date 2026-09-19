@@ -2,22 +2,22 @@
 
 #include <rbc/sync/mutex.h>
 
-typedef struct rbc_cond_var_impl rbc_cond_var_impl;
+typedef struct RbcCondVarImpl RbcCondVarImpl;
 
-struct rbc_cond_var {
-	rbc_cond_var_impl* impl;
+struct RbcCondVar {
+	RbcCondVarImpl* impl;
 };
-typedef struct rbc_cond_var rbc_cond_var;
+typedef struct RbcCondVar RbcCondVar;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RbcError rbc_cond_var_init(rbc_cond_var* self) RBC_NONNULL;
-RBC_EXPORT RbcError rbc_cond_var_destroy(rbc_cond_var* self) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_cond_var_init(RbcCondVar* self) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_cond_var_destroy(RbcCondVar* self) RBC_NONNULL;
 
-RBC_EXPORT RbcError rbc_cond_var_notify(rbc_cond_var self);
-RBC_EXPORT RbcError rbc_cond_var_notify_all(rbc_cond_var self);
-RBC_EXPORT RbcError rbc_cond_var_wait(rbc_cond_var self, rbc_mutex mutex) RBC_REQUIRES_CAPABILITY(mutex);
-RBC_EXPORT RbcError rbc_cond_var_wait_for(rbc_cond_var self, rbc_mutex mutex, rbc_duration timeout) RBC_REQUIRES_CAPABILITY(mutex);
-RBC_EXPORT RbcError rbc_cond_var_wait_until(rbc_cond_var self, rbc_mutex mutex, rbc_time deadline) RBC_REQUIRES_CAPABILITY(mutex);
+RBC_EXPORT RbcError rbc_cond_var_notify(RbcCondVar self);
+RBC_EXPORT RbcError rbc_cond_var_notify_all(RbcCondVar self);
+RBC_EXPORT RbcError rbc_cond_var_wait(RbcCondVar self, RbcMutex mutex) RBC_REQUIRES_CAPABILITY(mutex);
+RBC_EXPORT RbcError rbc_cond_var_wait_for(RbcCondVar self, RbcMutex mutex, RbcDuration timeout) RBC_REQUIRES_CAPABILITY(mutex);
+RBC_EXPORT RbcError rbc_cond_var_wait_until(RbcCondVar self, RbcMutex mutex, RbcTime deadline) RBC_REQUIRES_CAPABILITY(mutex);
 
 RBC_END_EXTERN_C

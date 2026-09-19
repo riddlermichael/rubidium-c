@@ -2,18 +2,18 @@
 
 #include <rbc/sync/common.h>
 
-typedef struct rbc_barrier_impl rbc_barrier_impl;
+typedef struct RbcBarrierImpl RbcBarrierImpl;
 
-struct rbc_barrier {
-	rbc_barrier_impl* impl;
+struct RbcBarrier {
+	RbcBarrierImpl* impl;
 };
-typedef struct rbc_barrier rbc_barrier;
+typedef struct RbcBarrier RbcBarrier;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RbcError rbc_barrier_init(rbc_barrier* self, unsigned count) RBC_NONNULL;
-RBC_EXPORT RbcError rbc_barrier_destroy(rbc_barrier* self) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_barrier_init(RbcBarrier* self, unsigned count) RBC_NONNULL;
+RBC_EXPORT RbcError rbc_barrier_destroy(RbcBarrier* self) RBC_NONNULL;
 
-RBC_EXPORT RbcError rbc_barrier_wait(rbc_barrier self);
+RBC_EXPORT RbcError rbc_barrier_wait(RbcBarrier self);
 
 RBC_END_EXTERN_C

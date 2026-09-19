@@ -2,20 +2,20 @@
 
 #include <rbc/sync/common.h>
 
-typedef struct rbc_spinlock_impl rbc_spinlock_impl;
+typedef struct RbcSpinLockImpl RbcSpinLockImpl;
 
-struct RBC_CAPABILITY("rbc_spinlock") rbc_spinlock {
-	rbc_spinlock_impl* impl;
+struct RBC_CAPABILITY("RbcSpinLock") RbcSpinLock {
+	RbcSpinLockImpl* impl;
 };
-typedef struct rbc_spinlock rbc_spinlock;
+typedef struct RbcSpinLock RbcSpinLock;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RbcError rbc_spinlock_init(rbc_spinlock* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
-RBC_EXPORT RbcError rbc_spinlock_destroy(rbc_spinlock* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_spinlock_init(RbcSpinLock* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
+RBC_EXPORT RbcError rbc_spinlock_destroy(RbcSpinLock* self) RBC_NONNULL RBC_LOCKS_EXCLUDED(*self);
 
-RBC_EXPORT RbcError rbc_spinlock_lock(rbc_spinlock self) RBC_ACQUIRE_CAPABILITY(self);
-RBC_EXPORT RbcError rbc_spinlock_try_lock(rbc_spinlock self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
-RBC_EXPORT RbcError rbc_spinlock_unlock(rbc_spinlock self) RBC_RELEASE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_spinlock_lock(RbcSpinLock self) RBC_ACQUIRE_CAPABILITY(self);
+RBC_EXPORT RbcError rbc_spinlock_try_lock(RbcSpinLock self) RBC_TRY_ACQUIRE_CAPABILITY(0, self);
+RBC_EXPORT RbcError rbc_spinlock_unlock(RbcSpinLock self) RBC_RELEASE_CAPABILITY(self);
 
 RBC_END_EXTERN_C

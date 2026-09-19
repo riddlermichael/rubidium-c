@@ -20,8 +20,8 @@
 	#include <rbc/sync/mutex.h>
 	#include <rbc/sync/once.h>
 
-static rbc_mutex g_assert_handler_mutex;
-static rbc_once g_init_mutex_once = RBC_ONCE_INIT;
+static RbcMutex g_assert_handler_mutex;
+static RbcOnce g_init_mutex_once = RBC_ONCE_INIT;
 
 static void rbc_init_assert_handler_mutex(void) {
 	rbc_mutex_init(&g_assert_handler_mutex);

@@ -4,11 +4,11 @@
 
 #if RBC_USE(PTHREADS)
 
-struct rbc_mutex_impl {
+struct RbcMutexImpl {
 	pthread_mutex_t impl;
 };
 
-RbcError rbc_mutex_init(rbc_mutex* self) {
+RbcError rbc_mutex_init(RbcMutex* self) {
 	#define RBC_SYNC_CHECK_WITH_CLEANUP(expr)     \
 		do {                                      \
 			int const _err = expr;                \
@@ -26,7 +26,7 @@ RbcError rbc_mutex_init(rbc_mutex* self) {
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
 
-	self->impl = malloc(sizeof(rbc_mutex_impl));
+	self->impl = malloc(sizeof(RbcMutexImpl));
 	RBC_SYNC_CHECK_WITH_CLEANUP(self->impl ? RBC_ERROR_OK : RBC_ERROR_NOT_ENOUGH_MEMORY);
 
 	int const error = pthread_mutex_init(RBC_SYNC_IMPL_PTR, &attr);
@@ -36,22 +36,22 @@ RbcError rbc_mutex_init(rbc_mutex* self) {
 	#undef RBC_SYNC_CHECK_WITH_CLEANUP
 }
 
-RbcError rbc_mutex_destroy(rbc_mutex* self) {
+RbcError rbc_mutex_destroy(RbcMutex* self) {
 	RBC_SYNC_DESTROY(pthread_mutex_destroy(RBC_SYNC_IMPL_PTR));
 }
 
-RbcError rbc_mutex_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_lock(RbcMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_lock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) RBC_NO_THREAD_SAFETY_ANALYSIS {
-	rbc_time const deadline = rbc_time_deadline_from_timeout(timeout);
+RbcError rbc_mutex_lock_for(RbcMutex self, RbcDuration timeout) RBC_NO_THREAD_SAFETY_ANALYSIS {
+	RbcTime const deadline = rbc_time_deadline_from_timeout(timeout);
 	return rbc_mutex_lock_until(self, deadline);
 }
 
-RbcError rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_lock_until(RbcMutex self, RbcTime deadline) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	#ifndef RBC_OS_DARWIN
-	rbc_timespec const ts = rbc_time_to_timespec(deadline);
+	RbcTimespec const ts = rbc_time_to_timespec(deadline);
 	return pthread_mutex_timedlock(RBC_SYNC_IMPL, (struct timespec const*) &ts);
 	#else
 	RBC_UNUSED(self);
@@ -60,22 +60,22 @@ RbcError rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) RBC_NO_THREAD_S
 	#endif
 }
 
-RbcError rbc_mutex_try_lock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_try_lock(RbcMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_trylock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_mutex_unlock(rbc_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_mutex_unlock(RbcMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_mutex_unlock(RBC_SYNC_IMPL);
 }
 
 #elif RBC_USE(WIN32_THREADS)
 
-struct rbc_mutex_impl {
+struct RbcMutexImpl {
 	CRITICAL_SECTION impl;
 };
 
-RbcError rbc_mutex_init(rbc_mutex* self) {
-	RBC_SYNC_INIT(rbc_mutex);
+RbcError rbc_mutex_init(RbcMutex* self) {
+	RBC_SYNC_INIT(RbcMutex);
 	/**
 	 * Windows Server 2003 and Windows XP:
 	 * In low memory situations, InitializeCriticalSection can raise a STATUS_NO_MEMORY exception.
@@ -94,7 +94,7 @@ RbcError rbc_mutex_init(rbc_mutex* self) {
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_mutex_destroy(rbc_mutex* self) {
+RbcError rbc_mutex_destroy(RbcMutex* self) {
 	if (self->impl) {
 		DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
 		free(self->impl);
@@ -102,7 +102,7 @@ RbcError rbc_mutex_destroy(rbc_mutex* self) {
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_mutex_lock(rbc_mutex self) {
+RbcError rbc_mutex_lock(RbcMutex self) {
 	/**
 	 * This function can raise EXCEPTION_POSSIBLE_DEADLOCK, also known as STATUS_POSSIBLE_DEADLOCK,
 	 * if a wait operation on the critical section times out.
@@ -118,29 +118,29 @@ RbcError rbc_mutex_lock(rbc_mutex self) {
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_mutex_lock_for(rbc_mutex self, rbc_duration timeout) {
+RbcError rbc_mutex_lock_for(RbcMutex self, RbcDuration timeout) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(timeout);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-RbcError rbc_mutex_lock_until(rbc_mutex self, rbc_time deadline) {
+RbcError rbc_mutex_lock_until(RbcMutex self, RbcTime deadline) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(deadline);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-RbcError rbc_mutex_try_lock(rbc_mutex self) {
+RbcError rbc_mutex_try_lock(RbcMutex self) {
 	return TryEnterCriticalSection(RBC_SYNC_IMPL)
-	         ? RBC_ERROR_OK
-	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+	    ? RBC_ERROR_OK
+	    : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 }
 
-RbcError rbc_mutex_unlock(rbc_mutex self) {
+RbcError rbc_mutex_unlock(RbcMutex self) {
 	LeaveCriticalSection(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }
 
 #endif
 
-RBC_LOCK_GUARD_IMPL(rbc_mutex_locker, rbc_mutex)
+// RBC_LOCK_GUARD_IMPL(RbcMutexLocker, RbcMutex)

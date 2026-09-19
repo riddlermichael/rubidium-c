@@ -26,13 +26,13 @@
 // NOLINTBEGIN(bugprone-macro-parentheses)
 
 #define RBC_FROM_CHARS_IMPL_SIGNED(type)                                      \
-	rbc_from_chars_result RBC_CONCAT(rbc_from_chars_, type)(                  \
+	RbcFromCharsResult RBC_CONCAT(rbc_from_chars_, type)(                     \
 	    char const* first,                                                    \
 	    char const* last,                                                     \
 	    type* value) {                                                        \
 		type const max = RBC_CONCAT(type, max);                               \
 		type const min = RBC_CONCAT(type, min);                               \
-		rbc_from_chars_result result;                                         \
+		RbcFromCharsResult result;                                            \
 		result.ptr = first;                                                   \
 		result.error = RBC_ERROR_INVALID_ARGUMENT;                            \
 		if (last <= first) {                                                  \
@@ -90,12 +90,12 @@ RBC_FROM_CHARS_IMPL_SIGNED(i32)
 RBC_FROM_CHARS_IMPL_SIGNED(i64)
 
 #define RBC_FROM_CHARS_IMPL_UNSIGNED(type)                         \
-	rbc_from_chars_result RBC_CONCAT(rbc_from_chars_, type)(       \
+	RbcFromCharsResult RBC_CONCAT(rbc_from_chars_, type)(          \
 	    char const* first,                                         \
 	    char const* last,                                          \
 	    type* value) {                                             \
 		type const max = RBC_CONCAT(type, max);                    \
-		rbc_from_chars_result result;                              \
+		RbcFromCharsResult result;                                 \
 		result.ptr = first;                                        \
 		result.error = RBC_ERROR_INVALID_ARGUMENT;                 \
 		if (last <= first) {                                       \
@@ -145,58 +145,58 @@ RBC_FROM_CHARS_IMPL_UNSIGNED(u16)
 RBC_FROM_CHARS_IMPL_UNSIGNED(u32)
 RBC_FROM_CHARS_IMPL_UNSIGNED(u64)
 
-#define RBC_TO_CHARS_IMPL_SIGNED(type)                                        \
-	rbc_to_chars_result RBC_CONCAT(rbc_to_chars_, type)(                      \
-	    char* first,                                                          \
-	    char* last,                                                           \
-	    type value) {                                                         \
-		if (last <= first) {                                                  \
-			return (rbc_to_chars_result) {first, RBC_ERROR_INVALID_ARGUMENT}; \
-		}                                                                     \
-                                                                              \
-		if (value == 0) {                                                     \
-			*first++ = '0';                                                   \
-			return (rbc_to_chars_result) {first, RBC_ERROR_OK};               \
-		}                                                                     \
-                                                                              \
-		rbc_to_chars_result result;                                           \
-		result.ptr = last;                                                    \
-		result.error = RBC_ERROR_VALUE_TOO_LARGE;                             \
-                                                                              \
-		bool const is_min = value == RBC_CONCAT(type, min);                   \
-		if (value < 0) {                                                      \
-			*first++ = '-';                                                   \
-			value = is_min ? RBC_CONCAT(type, max) : -value;                  \
-		}                                                                     \
-		if (first == last) {                                                  \
-			return result;                                                    \
-		}                                                                     \
-                                                                              \
-		int nb_digits = 0;                                                    \
-		for (type x = value; x; x /= 10) {                                    \
-			++nb_digits;                                                      \
-		}                                                                     \
-		if (last < first + nb_digits) {                                       \
-			return result;                                                    \
-		}                                                                     \
-                                                                              \
-		char* ptr = first;                                                    \
-		while (value) {                                                       \
-			*ptr++ = '0' + (value % 10);                                      \
-			value /= 10;                                                      \
-		}                                                                     \
-		if (is_min) {                                                         \
-			++*first;                                                         \
-		}                                                                     \
-                                                                              \
-		result.ptr = ptr;                                                     \
-		result.error = RBC_ERROR_OK;                                          \
-		for (last = first + nb_digits - 1; first < last; ++first, --last) {   \
-			char t = *first;                                                  \
-			*first = *last;                                                   \
-			*last = t;                                                        \
-		}                                                                     \
-		return result;                                                        \
+#define RBC_TO_CHARS_IMPL_SIGNED(type)                                      \
+	RbcToCharsResult RBC_CONCAT(rbc_to_chars_, type)(                       \
+	    char* first,                                                        \
+	    char* last,                                                         \
+	    type value) {                                                       \
+		if (last <= first) {                                                \
+			return (RbcToCharsResult) {first, RBC_ERROR_INVALID_ARGUMENT};  \
+		}                                                                   \
+                                                                            \
+		if (value == 0) {                                                   \
+			*first++ = '0';                                                 \
+			return (RbcToCharsResult) {first, RBC_ERROR_OK};                \
+		}                                                                   \
+                                                                            \
+		RbcToCharsResult result;                                            \
+		result.ptr = last;                                                  \
+		result.error = RBC_ERROR_VALUE_TOO_LARGE;                           \
+                                                                            \
+		bool const is_min = value == RBC_CONCAT(type, min);                 \
+		if (value < 0) {                                                    \
+			*first++ = '-';                                                 \
+			value = is_min ? RBC_CONCAT(type, max) : -value;                \
+		}                                                                   \
+		if (first == last) {                                                \
+			return result;                                                  \
+		}                                                                   \
+                                                                            \
+		int nb_digits = 0;                                                  \
+		for (type x = value; x; x /= 10) {                                  \
+			++nb_digits;                                                    \
+		}                                                                   \
+		if (last < first + nb_digits) {                                     \
+			return result;                                                  \
+		}                                                                   \
+                                                                            \
+		char* ptr = first;                                                  \
+		while (value) {                                                     \
+			*ptr++ = '0' + (value % 10);                                    \
+			value /= 10;                                                    \
+		}                                                                   \
+		if (is_min) {                                                       \
+			++*first;                                                       \
+		}                                                                   \
+                                                                            \
+		result.ptr = ptr;                                                   \
+		result.error = RBC_ERROR_OK;                                        \
+		for (last = first + nb_digits - 1; first < last; ++first, --last) { \
+			char t = *first;                                                \
+			*first = *last;                                                 \
+			*last = t;                                                      \
+		}                                                                   \
+		return result;                                                      \
 	}
 
 RBC_TO_CHARS_IMPL_SIGNED(i8)
@@ -204,45 +204,45 @@ RBC_TO_CHARS_IMPL_SIGNED(i16)
 RBC_TO_CHARS_IMPL_SIGNED(i32)
 RBC_TO_CHARS_IMPL_SIGNED(i64)
 
-#define RBC_TO_CHARS_IMPL_UNSIGNED(type)                                      \
-	rbc_to_chars_result RBC_CONCAT(rbc_to_chars_, type)(                      \
-	    char* first,                                                          \
-	    char* last,                                                           \
-	    type value) {                                                         \
-		if (last <= first) {                                                  \
-			return (rbc_to_chars_result) {first, RBC_ERROR_INVALID_ARGUMENT}; \
-		}                                                                     \
-                                                                              \
-		if (value == 0) {                                                     \
-			*first++ = '0';                                                   \
-			return (rbc_to_chars_result) {first, RBC_ERROR_OK};               \
-		}                                                                     \
-                                                                              \
-		rbc_to_chars_result result;                                           \
-		result.ptr = last;                                                    \
-		result.error = RBC_ERROR_VALUE_TOO_LARGE;                             \
-		int nb_digits = 0;                                                    \
-		for (type x = value; x; x /= 10) {                                    \
-			++nb_digits;                                                      \
-		}                                                                     \
-		if (last < first + nb_digits) {                                       \
-			return result;                                                    \
-		}                                                                     \
-                                                                              \
-		char* ptr = first;                                                    \
-		while (value) {                                                       \
-			*ptr++ = '0' + (value % 10);                                      \
-			value /= 10;                                                      \
-		}                                                                     \
-                                                                              \
-		result.ptr = ptr;                                                     \
-		result.error = RBC_ERROR_OK;                                          \
-		for (last = first + nb_digits - 1; first < last; ++first, --last) {   \
-			char t = *first;                                                  \
-			*first = *last;                                                   \
-			*last = t;                                                        \
-		}                                                                     \
-		return result;                                                        \
+#define RBC_TO_CHARS_IMPL_UNSIGNED(type)                                    \
+	RbcToCharsResult RBC_CONCAT(rbc_to_chars_, type)(                       \
+	    char* first,                                                        \
+	    char* last,                                                         \
+	    type value) {                                                       \
+		if (last <= first) {                                                \
+			return (RbcToCharsResult) {first, RBC_ERROR_INVALID_ARGUMENT};  \
+		}                                                                   \
+                                                                            \
+		if (value == 0) {                                                   \
+			*first++ = '0';                                                 \
+			return (RbcToCharsResult) {first, RBC_ERROR_OK};                \
+		}                                                                   \
+                                                                            \
+		RbcToCharsResult result;                                            \
+		result.ptr = last;                                                  \
+		result.error = RBC_ERROR_VALUE_TOO_LARGE;                           \
+		int nb_digits = 0;                                                  \
+		for (type x = value; x; x /= 10) {                                  \
+			++nb_digits;                                                    \
+		}                                                                   \
+		if (last < first + nb_digits) {                                     \
+			return result;                                                  \
+		}                                                                   \
+                                                                            \
+		char* ptr = first;                                                  \
+		while (value) {                                                     \
+			*ptr++ = '0' + (value % 10);                                    \
+			value /= 10;                                                    \
+		}                                                                   \
+                                                                            \
+		result.ptr = ptr;                                                   \
+		result.error = RBC_ERROR_OK;                                        \
+		for (last = first + nb_digits - 1; first < last; ++first, --last) { \
+			char t = *first;                                                \
+			*first = *last;                                                 \
+			*last = t;                                                      \
+		}                                                                   \
+		return result;                                                      \
 	}
 
 RBC_TO_CHARS_IMPL_UNSIGNED(u8)

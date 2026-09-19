@@ -10,107 +10,107 @@ enum {
 	RBC_TO_CHARS_RESULT_MAX_LEN = 20
 };
 
-struct rbc_from_chars_result {
+struct RbcFromCharsResult {
 	char const* ptr;
 	RbcError error;
 };
 
-typedef struct rbc_from_chars_result rbc_from_chars_result;
+typedef struct RbcFromCharsResult RbcFromCharsResult;
 
-struct rbc_to_chars_result {
+struct RbcToCharsResult {
 	char* ptr;
 	RbcError error;
 };
 
-typedef struct rbc_to_chars_result rbc_to_chars_result;
+typedef struct RbcToCharsResult RbcToCharsResult;
 
 RBC_BEGIN_EXTERN_C
 
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_i8(char const* first, char const* last, i8* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_i16(char const* first, char const* last, i16* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_i32(char const* first, char const* last, i32* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_i64(char const* first, char const* last, i64* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_i8(char const* first, char const* last, i8* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_i16(char const* first, char const* last, i16* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_i32(char const* first, char const* last, i32* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_i64(char const* first, char const* last, i64* value);
 
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_u8(char const* first, char const* last, u8* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_u16(char const* first, char const* last, u16* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_u32(char const* first, char const* last, u32* value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_from_chars_result rbc_from_chars_u64(char const* first, char const* last, u64* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_u8(char const* first, char const* last, u8* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_u16(char const* first, char const* last, u16* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_u32(char const* first, char const* last, u32* value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcFromCharsResult rbc_from_chars_u64(char const* first, char const* last, u64* value);
 
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_i8(char* first, char* last, i8 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_i16(char* first, char* last, i16 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_i32(char* first, char* last, i32 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_i64(char* first, char* last, i64 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_i8(char* first, char* last, i8 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_i16(char* first, char* last, i16 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_i32(char* first, char* last, i32 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_i64(char* first, char* last, i64 value);
 
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_u8(char* first, char* last, u8 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_u16(char* first, char* last, u16 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_u32(char* first, char* last, u32 value);
-RBC_EXPORT RBC_NOTHROW RBC_PURE rbc_to_chars_result rbc_to_chars_u64(char* first, char* last, u64 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_u8(char* first, char* last, u8 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_u16(char* first, char* last, u16 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_u32(char* first, char* last, u32 value);
+RBC_EXPORT RBC_NOTHROW RBC_PURE RbcToCharsResult rbc_to_chars_u64(char* first, char* last, u64 value);
 
 RBC_END_EXTERN_C
 
 #ifdef __cplusplus
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, i8* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, i8* value) noexcept {
 	return rbc_from_chars_i8(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, i16* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, i16* value) noexcept {
 	return rbc_from_chars_i16(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, i32* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, i32* value) noexcept {
 	return rbc_from_chars_i32(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, i64* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, i64* value) noexcept {
 	return rbc_from_chars_i64(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, u8* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, u8* value) noexcept {
 	return rbc_from_chars_u8(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, u16* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, u16* value) noexcept {
 	return rbc_from_chars_u16(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, u32* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, u32* value) noexcept {
 	return rbc_from_chars_u32(first, last, value);
 }
 
-rbc_from_chars_result rbc_from_chars(char const* first, char const* last, u64* value) noexcept {
+RbcFromCharsResult rbc_from_chars(char const* first, char const* last, u64* value) noexcept {
 	return rbc_from_chars_u64(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, i8 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, i8 value) noexcept {
 	return rbc_to_chars_i8(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, i16 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, i16 value) noexcept {
 	return rbc_to_chars_i16(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, i32 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, i32 value) noexcept {
 	return rbc_to_chars_i32(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, i64 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, i64 value) noexcept {
 	return rbc_to_chars_i64(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, u8 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, u8 value) noexcept {
 	return rbc_to_chars_u8(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, u16 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, u16 value) noexcept {
 	return rbc_to_chars_u16(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, u32 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, u32 value) noexcept {
 	return rbc_to_chars_u32(first, last, value);
 }
 
-rbc_to_chars_result rbc_to_chars(char* first, char* last, u64 value) noexcept {
+RbcToCharsResult rbc_to_chars(char* first, char* last, u64 value) noexcept {
 	return rbc_to_chars_u64(first, last, value);
 }
 

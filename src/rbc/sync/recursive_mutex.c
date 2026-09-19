@@ -4,11 +4,11 @@
 
 #if RBC_USE(PTHREADS)
 
-struct rbc_recursive_mutex_impl {
+struct RbcRecursiveMutexImpl {
 	pthread_mutex_t impl;
 };
 
-RbcError rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
+RbcError rbc_recursive_mutex_init(RbcRecursiveMutex* self) {
 	#define RBC_SYNC_CHECK_WITH_CLEANUP(expr)     \
 		do {                                      \
 			int const _err = expr;                \
@@ -26,7 +26,7 @@ RbcError rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
 
-	self->impl = malloc(sizeof(rbc_recursive_mutex_impl));
+	self->impl = malloc(sizeof(RbcRecursiveMutexImpl));
 	RBC_SYNC_CHECK_WITH_CLEANUP(self->impl ? RBC_ERROR_OK : RBC_ERROR_NOT_ENOUGH_MEMORY);
 
 	int const error = pthread_mutex_init(RBC_SYNC_IMPL_PTR, &attr);
@@ -36,46 +36,46 @@ RbcError rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
 	#undef RBC_SYNC_CHECK_WITH_CLEANUP
 }
 
-RbcError rbc_recursive_mutex_destroy(rbc_recursive_mutex* self) {
+RbcError rbc_recursive_mutex_destroy(RbcRecursiveMutex* self) {
 	RBC_SYNC_DESTROY(pthread_mutex_destroy(RBC_SYNC_IMPL_PTR));
 }
 
-RbcError rbc_recursive_mutex_lock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_lock(RbcRecursiveMutex self) {
 	return pthread_mutex_lock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_recursive_mutex_lock_for(rbc_recursive_mutex self, rbc_duration timeout) {
-	rbc_time const deadline = rbc_time_deadline_from_timeout(timeout);
+RbcError rbc_recursive_mutex_lock_for(RbcRecursiveMutex self, RbcDuration timeout) {
+	RbcTime const deadline = rbc_time_deadline_from_timeout(timeout);
 	return rbc_recursive_mutex_lock_until(self, deadline);
 }
 
-RbcError rbc_recursive_mutex_lock_until(rbc_recursive_mutex self, rbc_time deadline) {
+RbcError rbc_recursive_mutex_lock_until(RbcRecursiveMutex self, RbcTime deadline) {
 	#ifdef RBC_OS_DARWIN
 	RBC_UNUSED(self);
 	RBC_UNUSED(deadline);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 	#else
-	rbc_timespec const ts = rbc_time_to_timespec(deadline);
+	RbcTimespec const ts = rbc_time_to_timespec(deadline);
 	return pthread_mutex_timedlock(RBC_SYNC_IMPL, (struct timespec const*) &ts);
 	#endif
 }
 
-RbcError rbc_recursive_mutex_try_lock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_try_lock(RbcRecursiveMutex self) {
 	return pthread_mutex_trylock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_recursive_mutex_unlock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_unlock(RbcRecursiveMutex self) {
 	return pthread_mutex_unlock(RBC_SYNC_IMPL);
 }
 
 #elif RBC_USE(WIN32_THREADS)
 
-struct rbc_recursive_mutex_impl {
+struct RbcRecursiveMutexImpl {
 	CRITICAL_SECTION impl;
 };
 
-RbcError rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
-	RBC_SYNC_INIT(rbc_recursive_mutex);
+RbcError rbc_recursive_mutex_init(RbcRecursiveMutex* self) {
+	RBC_SYNC_INIT(RbcRecursiveMutex);
 
 	/**
 	 * Windows Server 2003 and Windows XP:
@@ -95,12 +95,12 @@ RbcError rbc_recursive_mutex_init(rbc_recursive_mutex* self) {
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_recursive_mutex_destroy(rbc_recursive_mutex* self) {
+RbcError rbc_recursive_mutex_destroy(RbcRecursiveMutex* self) {
 	DeleteCriticalSection(RBC_SYNC_IMPL_PTR);
 	RBC_SYNC_DESTROY(RBC_ERROR_OK);
 }
 
-RbcError rbc_recursive_mutex_lock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_lock(RbcRecursiveMutex self) {
 	/**
 	 * This function can raise EXCEPTION_POSSIBLE_DEADLOCK, also known as STATUS_POSSIBLE_DEADLOCK,
 	 * if a wait operation on the critical section times out.
@@ -115,25 +115,25 @@ RbcError rbc_recursive_mutex_lock(rbc_recursive_mutex self) {
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_recursive_mutex_lock_for(rbc_recursive_mutex self, rbc_duration timeout) {
+RbcError rbc_recursive_mutex_lock_for(RbcRecursiveMutex self, RbcDuration timeout) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(timeout);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-RbcError rbc_recursive_mutex_lock_until(rbc_recursive_mutex self, rbc_time deadline) {
+RbcError rbc_recursive_mutex_lock_until(RbcRecursiveMutex self, RbcTime deadline) {
 	RBC_UNUSED(self);
 	RBC_UNUSED(deadline);
 	return RBC_ERROR_NOT_IMPLEMENTED;
 }
 
-RbcError rbc_recursive_mutex_try_lock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_try_lock(RbcRecursiveMutex self) {
 	return TryEnterCriticalSection(RBC_SYNC_IMPL)
-	         ? RBC_ERROR_OK
-	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+	    ? RBC_ERROR_OK
+	    : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 }
 
-RbcError rbc_recursive_mutex_unlock(rbc_recursive_mutex self) {
+RbcError rbc_recursive_mutex_unlock(RbcRecursiveMutex self) {
 	LeaveCriticalSection(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }

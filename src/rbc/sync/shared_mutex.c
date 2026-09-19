@@ -4,11 +4,11 @@
 
 #if RBC_USE(PTHREADS)
 
-struct rbc_shared_mutex_impl {
+struct RbcSharedMutexImpl {
 	pthread_rwlock_t impl;
 };
 
-RbcError rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind kind) {
+RbcError rbc_shared_mutex_init(RbcSharedMutex* self, RbcSharedMutexKind kind) {
 	#define RBC_SYNC_CHECK_WITH_CLEANUP(expr)      \
 		do {                                       \
 			int const _err = expr;                 \
@@ -26,7 +26,7 @@ RbcError rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind kin
 	RBC_SYNC_CHECK_WITH_CLEANUP(pthread_rwlockattr_setkind_np(&attr, kind));
 	#endif
 
-	self->impl = malloc(sizeof(rbc_shared_mutex_impl));
+	self->impl = malloc(sizeof(RbcSharedMutexImpl));
 	RBC_SYNC_CHECK_WITH_CLEANUP(self->impl ? RBC_ERROR_OK : RBC_ERROR_NOT_ENOUGH_MEMORY);
 
 	int const error = pthread_rwlock_init(RBC_SYNC_IMPL_PTR, &attr);
@@ -36,81 +36,81 @@ RbcError rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind kin
 	#undef RBC_SYNC_CHECK_WITH_CLEANUP
 }
 
-RbcError rbc_shared_mutex_destroy(rbc_shared_mutex* self) {
+RbcError rbc_shared_mutex_destroy(RbcSharedMutex* self) {
 	RBC_SYNC_DESTROY(pthread_rwlock_destroy(RBC_SYNC_IMPL_PTR));
 }
 
-RbcError rbc_shared_mutex_lock(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_lock(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_wrlock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_shared_mutex_try_lock(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_try_lock(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_trywrlock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_shared_mutex_lock_shared(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_lock_shared(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_rdlock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_shared_mutex_try_lock_shared(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_try_lock_shared(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_tryrdlock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_shared_mutex_unlock(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_unlock(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_unlock(RBC_SYNC_IMPL);
 }
 
-RbcError rbc_shared_mutex_unlock_shared(rbc_shared_mutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
+RbcError rbc_shared_mutex_unlock_shared(RbcSharedMutex self) RBC_NO_THREAD_SAFETY_ANALYSIS {
 	return pthread_rwlock_unlock(RBC_SYNC_IMPL);
 }
 
 #elif RBC_USE(WIN32_THREADS)
 
-struct rbc_shared_mutex_impl {
+struct RbcSharedMutexImpl {
 	SRWLOCK impl;
 };
 
-RbcError rbc_shared_mutex_init(rbc_shared_mutex* self, rbc_shared_mutex_kind kind) {
+RbcError rbc_shared_mutex_init(RbcSharedMutex* self, RbcSharedMutexKind kind) {
 	RBC_UNUSED(kind);
-	RBC_SYNC_INIT(rbc_shared_mutex);
+	RBC_SYNC_INIT(RbcSharedMutex);
 	InitializeSRWLock(RBC_SYNC_IMPL_PTR);
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_shared_mutex_destroy(rbc_shared_mutex* self) {
+RbcError rbc_shared_mutex_destroy(RbcSharedMutex* self) {
 	// an unlocked SRW lock with no waiting threads is in its initial state and can be copied, moved,
 	// and forgotten without being explicitly destroyed
 	RBC_SYNC_DESTROY(RBC_ERROR_OK);
 }
 
-RbcError rbc_shared_mutex_lock(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_lock(RbcSharedMutex self) {
 	AcquireSRWLockExclusive(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_shared_mutex_try_lock(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_try_lock(RbcSharedMutex self) {
 	return TryAcquireSRWLockExclusive(RBC_SYNC_IMPL)
-	         ? RBC_ERROR_OK
-	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+	    ? RBC_ERROR_OK
+	    : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 }
 
-RbcError rbc_shared_mutex_lock_shared(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_lock_shared(RbcSharedMutex self) {
 	AcquireSRWLockShared(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_shared_mutex_try_lock_shared(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_try_lock_shared(RbcSharedMutex self) {
 	return TryAcquireSRWLockShared(RBC_SYNC_IMPL)
-	         ? RBC_ERROR_OK
-	         : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
+	    ? RBC_ERROR_OK
+	    : RBC_ERROR_DEVICE_OR_RESOURCE_BUSY;
 }
 
-RbcError rbc_shared_mutex_unlock(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_unlock(RbcSharedMutex self) {
 	ReleaseSRWLockExclusive(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }
 
-RbcError rbc_shared_mutex_unlock_shared(rbc_shared_mutex self) {
+RbcError rbc_shared_mutex_unlock_shared(RbcSharedMutex self) {
 	ReleaseSRWLockShared(RBC_SYNC_IMPL);
 	return RBC_ERROR_OK;
 }
