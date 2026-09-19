@@ -16,10 +16,7 @@ use_sanitizers(Catch2)
 project(rbc-tests LANGUAGES CXX)
 
 # collect tests
-set(MODULES_WITH_TESTS
-    containers
-    core
-    utils)
+set(MODULES_WITH_TESTS containers core utils)
 set(SOURCES)
 foreach(X ${MODULES_WITH_TESTS})
     add_cxx_module(${X}/test ${RBC_ROOT_DIR})
